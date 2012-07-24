@@ -30,7 +30,7 @@ vector<string> removeWhiteSpaceElems(vector<string> &elems) {
 	vector<string> newElems;
 
 	vector<string>::iterator it;
-	for ( it=elems.begin() ; it < elems.end(); it++ ) {
+	for ( it=elems.begin() ; it != elems.end(); it++ ) {
 		if (*it != "") {
 			newElems.push_back(*it);
 		}
@@ -44,7 +44,7 @@ vector<string> removeElemsOfString(vector<string> &elems, const string strToRemo
 	vector<string> newElems;
 
 	vector<string>::iterator it;
-	for ( it=elems.begin() ; it < elems.end(); it++ ) {
+	for ( it=elems.begin() ; it != elems.end(); it++ ) {
 		if (*it != strToRemove) {
 			newElems.push_back(*it);
 		}

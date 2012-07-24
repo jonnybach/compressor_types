@@ -19,7 +19,7 @@
 #include "CompressorStagePerformance.h"
 #include "CompressorStage.h"
 #include "CompressorSpeedLine.h"
-
+#include "StringTrimmers.h"
 
 using namespace std;
 
@@ -28,16 +28,16 @@ using namespace std;
 static const string speedLineHdr("OVERALL RESULTS FOR SPEEDLINE");
 static const string speedLinePntsHdr("POINT    TIN    PIN     WCORR     PR     DT/T   ETAADI  ETAPOLY  WCORROUT");
 
-static const string stageSmryHdr1("STAGE");
-static const string stageSmryHdr2("SUMMARY");
-static const string stageSmryDataHdr1("POINT   ALF1   ALF2   ALF3   ALF4   DEFR   DEFS     WR     WS    MNR    MNS    DFR    DFS   INCR   INCS");
-static const string stageSmryDataHdr2("POINT    PS1    PS2    PS3    PS4    PT0    PT1    PT2    PT3    PT4    UM      T0    DEVR   DEVS");
+static const string stageSmryHdrStg("STAGE");
+static const string stageSmryHdrSmry("SUMMARY");
+static const string stageSmryHdrOgv("OGV");
 
 
 //function prototype declarations
 vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName);
 void showHelp();
-vector<CompressorStagePerformance*> getPerfForStage(ifstream& fileToParse, CompressorStage* stage);
+void getStagePerformance(ifstream& fileToParse, CompressorStage* stage);
+void getOgvPerformance(ifstream& fileToParse, CompressorStage* ogv);
 
 //function definitions
 int main(int argc, char *argv[]) {
@@ -118,8 +118,9 @@ int main(int argc, char *argv[]) {
 	sysCall.append(infileName);
 	sysCall.append(" ");
 	sysCall.append(outfileName);
-	const char *cCall = sysCall.c_str();
-	int rslt = system(cCall);
+	//const char *cCall = sysCall.c_str();
+	//int rslt = system(cCall);
+	int rslt = 0;
 
 	//compile the speedline objects from the results
 	vector<CompressorSpeedLine*> speedLines;
@@ -133,9 +134,13 @@ int main(int argc, char *argv[]) {
 	//calculate the mass flow for the given pressure ratio
 	double wCrrctIn, etaAdaib;
 	speedLines[0]->calcMassAndEta(pRatio, &wCrrctIn, &etaAdaib);
+	CompressorStagePerformance intrpStgPerf1 = speedLines[0]->getStagePerfForPressureRatio(1, pRatio);
+	CompressorStagePerformance intrpStgPerf2 = speedLines[0]->getStagePerfForPressureRatio(2, pRatio);
+	CompressorStagePerformance intrpStgPerf5 = speedLines[0]->getStagePerfForPressureRatio(5, pRatio);
+	CompressorStagePerformance intrpStgPerf8 = speedLines[0]->getStagePerfForPressureRatio(8, pRatio);
 
-	cout << "Press_Ratio\tW_Crct_In\tEta_Adiab\n";
-	cout << pRatio << "\t" << wCrrctIn << "\t" << etaAdaib << "\n";
+	cout << "Press_Ratio\tW_Crct_In\tEta_Adiab\tPt1_Sin\tPt2_Sin\tPt5_Sin\tPt8_Sin\n";
+	cout << pRatio << "\t" << wCrrctIn << "\t" << etaAdaib << "\t" << intrpStgPerf1.getPt3() << "\t" << intrpStgPerf2.getPt3() << "\t" << intrpStgPerf5.getPt3() << "\t" << intrpStgPerf8.getPt3() << "\n";
 
 	return 0;
 
@@ -148,10 +153,13 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 	vector<string> lineParts;
 
 	CompressorSpeedLine *crntSpeedLine;
-	CompressorOperatingPoint *tmpOpPnt;
-
 	vector<CompressorSpeedLine*> speedLines;
+
+	CompressorOperatingPoint *tmpOpPnt;
 	//vector<CompressorOperatingPoint> opPnts;
+
+	//CompressorStage* tmpStage;
+	vector<CompressorStage*> stages;
 
 	string line;
 	double crntSpeed;
@@ -180,6 +188,7 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 				crntSpeedLine = new CompressorSpeedLine;
 				crntSpeed = atof(lineParts[6].c_str());
 				crntSpeedLine->setShaftSpeed(crntSpeed);
+				crntSpeedLine->setStages(stages);
 
 				//add crntSpeedLine to speedLines vector
 				speedLines.push_back(crntSpeedLine);
@@ -190,6 +199,7 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 
 				//get data for each operating point on speed line
 				//TODO Add error checking for cases where more than one speedline exits
+				// as of 07/19/2012 Comp1D cannot write out more than one speedline
 				while ( myfile.good() ) {
 					getline(myfile,line);
 
@@ -215,13 +225,15 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 						//add operating point to vector of operating points
 						//opPnts.push_back(tmpOpPnt);
 						crntSpeedLine->addOperatingPoint(*tmpOpPnt);
+
 					} //end if ( !line.empty)
 				} //end while (myfile.good)
-			/*} else if (
-				line.find(stageSmryHdr1, 0 ) != string::npos
-				&& line.find(stageSmryHdr2, 0 ) != string::npos
+
+			} else if (
+				line.find(stageSmryHdrStg, 0 ) != string::npos
+				&& line.find(stageSmryHdrSmry, 0 ) != string::npos
 				) {
-				// found stage data
+				// found compressor stage performance data
 
 				// determine what stage number this section corresponds to
 				lineParts = split(line, ' ');
@@ -233,8 +245,31 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 				//instantiate a new compressor stage object
 				CompressorStage* newStg = new CompressorStage(tmpStgName);
 
-				vector<CompressorStagePerformance*> x = getPerfForStage(myfile, newStg);
-			*/
+				getStagePerformance(myfile, newStg);
+
+				//add stage to temp stages vector
+				stages.push_back(newStg);
+
+				//delete(newStg);
+
+			} else if (
+				line.find(stageSmryHdrOgv, 0 ) != string::npos
+				&& line.find(stageSmryHdrSmry, 0 ) != string::npos
+				) {
+				// found OGV stage data
+				string tmpStgName = "ogv";
+
+				//instantiate a new compressor stage object
+				CompressorStage* newStg = new CompressorStage(tmpStgName);
+
+				getOgvPerformance(myfile, newStg);
+
+				//add stage to temp stages vector
+				stages.push_back(newStg);
+				//crntSpeedLine->addStage(*newStg);  //jgb - doesn't exist yet
+
+				//delete(newStg);
+
 			}
 		} //end while (myfile.good)
 
@@ -243,48 +278,225 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 
 	}
 
-	delete tmpOpPnt;
-	delete crntSpeedLine;
+	//delete tmpOpPnt;
+	//delete crntSpeedLine;
 	return speedLines;
 
 }
 
-vector<CompressorStagePerformance*> getPerfForStage(ifstream& fileToParse, CompressorStage* stage) {
+void getStagePerformance(ifstream& fileToParse, CompressorStage* stage) {
 
-	double tmpPt0, tmpPt1, tmpPt2, tmpPt3, tmpPt4;
-	double tmpTt0;
-	double tmpAlp1, tmpAlp2, tmpAlp3, tmpAlp4;
+	//now that the start of the stage by stage performance output has been found, read all the data
+
+	static const string stageSmryDataHdr1("POINT   ALF1   ALF2   ALF3   ALF4   DEFR   DEFS     WR     WS    MNR    MNS    DFR    DFS   INCR   INCS");
+	static const string stageSmryDataHdr2("POINT    PS1    PS2    PS3    PS4    PT0    PT1    PT2    PT3    PT4    UM      T0    DEVR   DEVS");
+	static const string stageSmryDataHdr3("POINT INCCHR INCMLR INCOPR INCPSR INCCHS INCMLS INCOPS INCPSS ALFCHR ALFCHS    CMR    CMS   BLK1   BLK2   BLK3   BLK4");
+	static const string stageSmryDataHdr4("POINT WR-PRF WR-SHK WR-TIP WR-SEC WS-PRF WS-SHK WS-TIP WS-SEC   O/SR   O/SS  CLV2R  CLV2S   DEHR   DEHS    LG2   KOCH");
+	static const string stageSmryDataHdr5("POINT   VAU1   VAU2   VAU3   VAU4  DHUSQ EDHUSQ   DT/T  R_TOT R_STAT    PTS SPRCIR SPRCIS SPRCCR SPRCCS ETAADI");
+
+	int tmpOpPnt[100];
+	double tmpPt0[100], tmpPt1[100], tmpPt2[100], tmpPt3[100], tmpPt4[100];
+	double tmpTt0[100];
+	double tmpAlp1[100], tmpAlp2[100], tmpAlp3[100], tmpAlp4[100];
 
 	bool foundStageEnd = false;
+	bool foundBlankLine = false;
+
+	int lineIndx = 0;
+	int maxOpPtNmbr = -1;
+
+	string line;
+	vector<string> lineParts;
 
 	//loop through lines of text in the stage data section and find the pressure and temperature data
-	string line;
-	while ( fileToParse.good() || !foundStageEnd ) {
+	while ( fileToParse.good() && !foundStageEnd ) {
 		getline(fileToParse, line);
-		if (
-			line.find(stageSmryHdr1, 0 ) != string::npos
-			&& line.find(stageSmryHdr2, 0 ) != string::npos
-			) {
-			//found end of current stage data
-			//create and return compressor stage data
+		if ( line.compare(0, stageSmryDataHdr1.length(), stageSmryDataHdr1) == 0 ) {
+			//found first section of data
 
+			foundBlankLine = false;
+			lineIndx = 0;
+			while ( !foundBlankLine ) {
+
+				getline(fileToParse, line);
+
+				if ( !trim(line).empty() ) {
+
+					lineParts = split(line, ' ');
+					lineParts = removeWhiteSpaceElems(lineParts);
+
+					//store operating point and alpha values for this stage
+					tmpOpPnt[lineIndx] = atoi(lineParts[0].c_str());
+					tmpAlp1[lineIndx] = atof(lineParts[1].c_str());
+					tmpAlp2[lineIndx] = atof(lineParts[2].c_str());
+					tmpAlp3[lineIndx] = atof(lineParts[3].c_str());
+					tmpAlp4[lineIndx] = atof(lineParts[4].c_str());
+
+					maxOpPtNmbr = tmpOpPnt[lineIndx];
+
+					lineIndx++;
+
+				} else {
+					foundBlankLine = true;
+				}
+
+			}
+		} else if ( line.compare(0, stageSmryDataHdr2.length(), stageSmryDataHdr2) == 0 ) {
+			//found second section of data
+
+			foundBlankLine = false;
+			lineIndx = 0;
+			while ( !foundBlankLine ) {
+
+				getline(fileToParse, line);
+
+				if ( !trim(line).empty() ) {
+
+					lineParts = split(line, ' ');
+					lineParts = removeWhiteSpaceElems(lineParts);
+
+					//store total pressure values for this stage
+					tmpPt0[lineIndx] = atof(lineParts[5].c_str());
+					tmpPt1[lineIndx] = atof(lineParts[6].c_str());
+					tmpPt2[lineIndx] = atof(lineParts[7].c_str());
+					tmpPt3[lineIndx] = atof(lineParts[8].c_str());
+					tmpPt4[lineIndx] = atof(lineParts[9].c_str());
+
+					//store total pressure values for this stage
+					tmpTt0[lineIndx] = atof(lineParts[11].c_str());
+
+					lineIndx++;
+
+				} else {
+					foundBlankLine = true;
+				}
+
+			}
+
+		} else if ( line.compare(0, stageSmryDataHdr3.length(), stageSmryDataHdr3) == 0 ) {
+			//found third section of data
+		} else if ( line.compare(0, stageSmryDataHdr4.length(), stageSmryDataHdr4) == 0 ) {
+			//found forth section of data
+		} else if ( line.compare(0, stageSmryDataHdr5.length(), stageSmryDataHdr5) == 0 ) {
+			//found fifth section of data
 			foundStageEnd = true;
-
-		} else if ( line.compare(0, stageSmryDataHdr1.length(), stageSmryDataHdr1) ) {
-			//found line of text containing alpha data
-
-
-		} else if ( line.compare(0, stageSmryDataHdr2.length(), stageSmryDataHdr2) ) {
-			//found line of data containing press and temp data
-
-
 		}
 
-	} //end while (myfile.good)
+	} //end while ( fileToParse.good() || !foundStageEnd )
 
-	//CompressorStagePerformance* newCmpStg = new CompressorStagePerformance(stgNmbr, tmpPt0, tmpPt1, tmpPt2, tmpPt3, tmpPt4
-	//												, tmpTt0, tmpAlp1, tmpAlp2, tmpAlp3, tmpAlp4);
-	//return newCmpStg;
+	//generate operating point performance data objects for this compressor stage
+	CompressorStagePerformance* newPrf;
+	for ( int i = 0; i < maxOpPtNmbr; i++) {
+		newPrf = new CompressorStagePerformance( tmpOpPnt[i], tmpPt0[i], tmpPt1[i], tmpPt2[i], tmpPt3[i]
+					, tmpPt4[i], tmpTt0[i], tmpAlp1[i], tmpAlp2[i], tmpAlp3[i], tmpAlp4[i] );
+		stage->addPerformancePoint(i, *newPrf);
+	}
+	//delete(newPrf);
+
+}
+
+void getOgvPerformance(ifstream& fileToParse, CompressorStage* stage) {
+
+	static const string stageSmryDataHdr1("POINT   ALF3   ALF4   DEFS     WS    MNS    DFS   INCS");
+	static const string stageSmryDataHdr2("POINT    PS3    PS4    PT3    PT4    T0    DEVS");
+	static const string stageSmryDataHdr3("POINT INCCHS INCMLS INCOPS INCPSS   BLK3   BLK4");
+	static const string stageSmryDataHdr4("POINT WS-PRF WS-SHK WS-TIP WS-SEC   O/SS");
+
+	int tmpOpPnt[100];
+	double tmpPt0[100], tmpPt1[100], tmpPt2[100], tmpPt3[100], tmpPt4[100];
+	double tmpTt0[100];
+	double tmpAlp1[100], tmpAlp2[100], tmpAlp3[100], tmpAlp4[100];
+
+	bool foundStageEnd = false;
+	bool foundBlankLine = false;
+
+	int lineIndx = 0;
+	int maxOpPtNmbr = -1;
+
+	string line;
+	vector<string> lineParts;
+
+	//loop through lines of text in the stage data section and find the pressure and temperature data
+	while ( fileToParse.good() && !foundStageEnd ) {
+		getline(fileToParse, line);
+		if ( line.compare(0, stageSmryDataHdr1.length(), stageSmryDataHdr1) == 0 ) {
+			//found first section of data
+
+			foundBlankLine = false;
+			lineIndx = 0;
+			while ( !foundBlankLine ) {
+
+				getline(fileToParse, line);
+
+				if ( !trim(line).empty() ) {
+
+					lineParts = split(line, ' ');
+					lineParts = removeWhiteSpaceElems(lineParts);
+
+					//store operating point and alpha values for this stage
+					tmpOpPnt[lineIndx] = atoi(lineParts[0].c_str());
+					tmpAlp1[lineIndx] = -9999; //alpha 1 doesn't exist for ogv
+					tmpAlp2[lineIndx] = -9999; //alpha 2 doesn't exist for ogv
+					tmpAlp3[lineIndx] = atof(lineParts[1].c_str());
+					tmpAlp4[lineIndx] = atof(lineParts[2].c_str());
+
+					maxOpPtNmbr = tmpOpPnt[lineIndx];
+
+					lineIndx++;
+
+				} else {
+					foundBlankLine = true;
+				}
+
+			}
+		} else if ( line.compare(0, stageSmryDataHdr2.length(), stageSmryDataHdr2) == 0 ) {
+			//found second section of data
+
+			foundBlankLine = false;
+			lineIndx = 0;
+			while ( !foundBlankLine ) {
+
+				getline(fileToParse, line);
+
+				if ( !trim(line).empty() ) {
+
+					lineParts = split(line, ' ');
+					lineParts = removeWhiteSpaceElems(lineParts);
+
+					//store total pressure values for this stage
+					tmpPt0[lineIndx] = -9999;
+					tmpPt1[lineIndx] = -9999;
+					tmpPt2[lineIndx] = -9999;
+					tmpPt3[lineIndx] = atof(lineParts[3].c_str());
+					tmpPt4[lineIndx] = atof(lineParts[4].c_str());
+
+					//store total pressure values for this stage
+					tmpTt0[lineIndx] = atof(lineParts[5].c_str());
+
+					lineIndx++;
+
+				} else {
+					foundBlankLine = true;
+				}
+
+			}
+
+		} else if ( line.compare(0, stageSmryDataHdr3.length(), stageSmryDataHdr3) == 0 ) {
+			//found third section of data
+		} else if ( line.compare(0, stageSmryDataHdr4.length(), stageSmryDataHdr4) == 0 ) {
+			//found forth section of data
+			foundStageEnd = true;
+		}
+	} //end while ( fileToParse.good() || !foundStageEnd )
+
+	//generate operating point performance data objects for this compressor stage
+	CompressorStagePerformance* newPrf;
+	for ( int i = 0; i < maxOpPtNmbr; i++) {
+		newPrf = new CompressorStagePerformance( tmpOpPnt[i], tmpPt0[i], tmpPt1[i], tmpPt2[i], tmpPt3[i]
+					, tmpPt4[i], tmpTt0[i], tmpAlp1[i], tmpAlp2[i], tmpAlp3[i], tmpAlp4[i] );
+		stage->addPerformancePoint(i, *newPrf);
+	}
+	//delete(newPrf);
 
 }
 

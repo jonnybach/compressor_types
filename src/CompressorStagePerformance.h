@@ -8,14 +8,15 @@
 #ifndef COMPRESSORSTAGEPERFORMANCE_H_
 #define COMPRESSORSTAGEPERFORMANCE_H_
 
-#include "CompressorOperatingPoint.h"
+//forward declarations
+class CompressorOperatingPoint;
 
 class CompressorStagePerformance {
 
 public:
 	//methods
 	CompressorStagePerformance();
-	CompressorStagePerformance(int stageNumber,
+	CompressorStagePerformance(int opPntNumber,
 		double pt0,
 		double pt1,
 		double pt2,
@@ -29,9 +30,7 @@ public:
 	virtual ~CompressorStagePerformance();
 
 	//accessors (properties)
-	int getStgNmbr();
 	int getOptPntNmbr();
-	CompressorOperatingPoint* getOptPnt();
 
 	double getPt0();
 	double getPt1();
@@ -48,11 +47,7 @@ public:
 
 private:
 	//members
-	int _stgNmbr;
 	int _opPntNmbr;
-	CompressorOperatingPoint* _optPntInfo;
-
-	double _speed;
 
 	double _pt0;
 	double _pt1;

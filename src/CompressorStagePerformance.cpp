@@ -5,17 +5,17 @@
  *      Author: bachm03j
  */
 
+#include <fstream>
 #include "CompressorStagePerformance.h"
 
 CompressorStagePerformance::CompressorStagePerformance() {
 	// TODO Auto-generated constructor stub
-
 }
 
-CompressorStagePerformance::CompressorStagePerformance(int stageNumber,
+CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
 	double pt0,	double pt1,	double pt2,	double pt3,	double pt4,	double tt0,
 	double alpha1,	double alpha2,	double alpha3,	double alpha4) {
-	_stgNmbr = stageNumber;
+	_opPntNmbr = opPntNumber;
 	_pt0 = pt0;
 	_pt1 = pt1;
 	_pt2 = pt2;
@@ -30,9 +30,11 @@ CompressorStagePerformance::CompressorStagePerformance(int stageNumber,
 
 CompressorStagePerformance::~CompressorStagePerformance() {
 	// TODO Auto-generated destructor stub
+	//printf("called compressor stage performance destructor\n\n");
 }
 
 //accessors
+int CompressorStagePerformance::getOptPntNmbr() { return _opPntNmbr; }
 double CompressorStagePerformance::getPt0() { return _pt0; }
 double CompressorStagePerformance::getPt1() { return _pt1; }
 double CompressorStagePerformance::getPt2() { return _pt2; }

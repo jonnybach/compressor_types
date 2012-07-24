@@ -5,6 +5,7 @@
  *      Author: bachm03j
  */
 
+#include <fstream>
 #include "CompressorOperatingPoint.h"
 
 CompressorOperatingPoint::CompressorOperatingPoint() {
@@ -30,6 +31,7 @@ CompressorOperatingPoint::CompressorOperatingPoint(int opPntNmbr, double inletTe
 
 CompressorOperatingPoint::~CompressorOperatingPoint() {
 	// TODO Auto-generated destructor stub
+	//printf("called compressor operating point destructor\n\n");
 }
 
 void CompressorOperatingPoint::setOperatingPoint(int opPntNmbr, double inletTemp, double inletPress
@@ -52,4 +54,4 @@ void CompressorOperatingPoint::setOperatingPoint(int opPntNmbr, double inletTemp
 //accessors
 double CompressorOperatingPoint::getWcorct() { return _wCorct; }
 double CompressorOperatingPoint::getEtaAdi() { return _etaAdi; }
-double CompressorOperatingPoint::getPressRatio() {return _pressRatio; }
+double CompressorOperatingPoint::getPressRatio() { return _pressRatio; }

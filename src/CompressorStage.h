@@ -10,8 +10,6 @@
 
 #include <string>
 #include <vector>
-
-#include "CompressorOperatingPoint.h"
 #include "CompressorStagePerformance.h"
 
 class CompressorStage {
@@ -21,13 +19,18 @@ public:
 	CompressorStage(std::string stageName);
 	virtual ~CompressorStage();
 
-	void addPerformancePoint(int index, CompressorStagePerformance* perfPntToAdd);
+	void addPerformancePoint(int index, CompressorStagePerformance perfPntToAdd);
+
+	//accessors/properties
+	std::vector <CompressorStagePerformance> getOpPntPerf();
 
 private:
 	//members
-	CompressorOperatingPoint* _optPntInfo;
 	std::string _stgName;
-	std::vector <CompressorStagePerformance*> _optPntPerf;
+	std::vector <CompressorStagePerformance> _optPntPerf;
+
+	//stage geometry
+	//stage input data
 
 };
 

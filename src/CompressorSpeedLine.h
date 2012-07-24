@@ -9,7 +9,11 @@
 #define COMPRESSORSPEEDLINE_H_
 
 #include <vector>
-#include "CompressorOperatingPoint.h"
+
+//forward declarations
+class CompressorOperatingPoint;
+class CompressorStage;
+class CompressorStagePerformance;
 
 class CompressorSpeedLine {
 
@@ -19,9 +23,13 @@ public:
 	virtual ~CompressorSpeedLine();
 
 	void addOperatingPoint(CompressorOperatingPoint opPntToAdd);
+	void addStage(CompressorStage stageToAdd);
+	void setStages(std::vector<CompressorStage*> stages);
+
 	double calcMassFlow(double pressureRatio);
 	double calcEtaAdi(double pressureRatio);
 	void calcMassAndEta(double pressureRatio, double *wCorrctIn, double *etaAdiab);
+	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
 
 	//shaft speed accessors
 	double getShaftSpeed();
@@ -30,7 +38,9 @@ public:
 private:
 	//members
 	std::vector<CompressorOperatingPoint> _opPnts;
+	std::vector<CompressorStage *> _stages;
 	double _shaftSpeed; //rpm
+	bool testIt;
 
 };
 
