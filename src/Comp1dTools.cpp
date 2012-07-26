@@ -24,6 +24,9 @@
 using namespace std;
 
 
+static const string version("0.2");
+
+
 //create constants that will be used throughout cpp file
 static const string speedLineHdr("OVERALL RESULTS FOR SPEEDLINE");
 static const string speedLinePntsHdr("POINT    TIN    PIN     WCORR     PR     DT/T   ETAADI  ETAPOLY  WCORROUT");
@@ -54,33 +57,40 @@ int main(int argc, char *argv[]) {
 	string infileName;
 	string outfileName;
 
+	bool runComp1d = false;
+
     //inhibit the error message from getopt by setting opterr to zero
     opterr = 0;
 
-    while ((c = getopt(argc, argv, "p:")) != -1) {
+    while ((c = getopt(argc, argv, "e:p:" )) != -1) {
     	switch (c) {
-    	//case 'a':
-    	//  aflag = 1;
-    	//  break;
-    	//case 'b':
-    	//  bflag = 1;
-    	//  break;
+    	case 'e':
+    		//execute comp1d with specified input file
+    		infileName = optarg;
+    		runComp1d = true;
+    		break;
+
     	case 'p':
+    		//interpolate compressor perofrmance at specified pressure ratio
     		pvalue = optarg;
     		pRatio = atof(pvalue);
     		break;
+
     	case '?':
-    		if (optopt == 'p')
+    		if ( optopt == 'e' || optopt == 'p' ) {
     			fprintf (stderr, "Option -%c requires an argument.\n", optopt);
-    		else if (isprint(optopt))
+    		} else if (isprint(optopt)) {
     			fprintf (stderr, "Unknown option `-%c'.\n", optopt);
-    		else
+    		} else {
     			fprintf (stderr,
     					"Unknown option character `\\x%x'.\n",
     					optopt);
+    		}
     		return 1;
+
     	default:
     		abort ();
+
     	}
     }
 
@@ -96,36 +106,25 @@ int main(int argc, char *argv[]) {
     	}
     }
 
-//	int i;
-//	for	(i = 0; i < argc; i++) {
-//		if (strncmp(argv[i],"-p",2) == 0) {
-//			pRatio = atof(argv[i]+2);
-//		} else if (i==(argc-2)) {
-//			//argument is input file name
-//			infileName = argv[i];
-//		} else if (i==(argc-1)) {
-//			//argument is output file name
-//			outfileName = argv[i];
-//		}
-//	}
+	//TODO check that files specified by user exist, if not return error
 
-	//TODO check that the infile exists, if not return error
-
-	//call cmodp
-	string sysCall;
-	sysCall.assign("/swd/cmodp/cmodp");
-	sysCall.append(" ");
-	sysCall.append(infileName);
-	sysCall.append(" ");
-	sysCall.append(outfileName);
-	//const char *cCall = sysCall.c_str();
-	//int rslt = system(cCall);
-	int rslt = 0;
+	int failed = 0;
+    if ( runComp1d ) {
+    	//call cmodp
+    	string sysCall;
+    	sysCall.assign("/swd/cmodp/cmodp");
+    	sysCall.append(" ");
+    	sysCall.append(infileName);
+    	sysCall.append(" ");
+    	sysCall.append(outfileName);
+    	const char *cCall = sysCall.c_str();
+    	failed = system(cCall);
+    }
 
 	//compile the speedline objects from the results
 	vector<CompressorSpeedLine*> speedLines;
 
-	if (rslt) {
+	if (runComp1d && failed) {
 		//comp1d failed
 	} else {
 		speedLines = readComp1dOutfile(outfileName);
@@ -501,13 +500,24 @@ void getOgvPerformance(ifstream& fileToParse, CompressorStage* stage) {
 }
 
 void showHelp() {
-	printf("\nComp1D Tools - ERROR in argument syntax\n"
-			"\tProgram must be called as follows:\n"
-			"\tcomp1dtools [Options] \"input file\" \"output file\"\n"
-			"\t    1) \"input file\" is name of Comp1D input file\n"
-			"\t    2) \"output file\" is name of the output file to write results to\n"
-			"\t    Options) currently the only option is -p <PRESSURE RATIO>  which allows Comp1d tools to \n"
-			"\t             determine the mass flow associated with a specified pressure ratio\n");
+	printf("\nComp1D Tools (v%s) - ERROR in argument syntax\n\n"
+			"Program must be called as follows:\n"
+			"\n"
+			"comp1dtools [Options] \RESULTS FILE>\n"
+			"\n"
+			"Required)\n"
+			"\t<RESULTS FILE>      : name of the Comp1D results file to be parsed.\n"
+			"\n"
+			"Options)\n"
+			"\t-e <INPUT FILE>     : runs Comp1d analysis mode using the specified input file <INPUT FILE> \n"
+			"\t                      and writes results to <RESULTS FILE>.  After running Comp1D \n"
+			"\t                      parses the results file for further operations.\n"
+			"\n"
+			"\t-p <PRESSURE RATIO> : allows Comp1d tools to interpolate the compressor performance\n"
+			"\t                      associated with the specified pressure ratio <PRESSURE RATIO>.\n"
+			"\t                      Will only run correctly when a series of points are run along a speedline.\n"
+			"\n"
+			, version.c_str());
 }
 
 

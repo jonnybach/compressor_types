@@ -1,0 +1,210 @@
+ CMDP/CMODP: HARMONIZED COMPRESSOR  Test data RFT 163 Pt.1  Run 32.544  6/14/2006  @14:23
+ Corr Flow = 566.486 kg/s  Blading  PR = 18.625  adia. eff. = 88.46% ,IGV 5.48,VGV1 0.49,VGV2 0.72,VGV3 2.98
+ NO OF STAGES = 13
+ ANNULUS DETAILS (mm)
+       STAGE            X-HUB     R-HUB   X-CASING  R-CASING
+ ROTOR   1   INLET     498.59    546.81    544.31    1122.66    0.854
+ ROTOR   1   EXIT      800.17    598.99    735.58    1104.21    0.842
+ STATOR  1   INLET     843.10    608.20    830.25    1093.56    0.844
+ STATOR  1   EXIT      1020.45   645.71    1033.31   1064.24    0.860
+ ROTOR   2   INLET     1057.93   653.47    1080.07   1058.43    0.861
+ ROTOR   2   EXIT      1234.18   686.34    1201.29   1044.79    0.862
+ STATOR  2   INLET     1264.54   691.49    1255.57   1039.19    0.864
+ STATOR  2   EXIT      1396.79   713.01    1408.28   1025.03    0.870
+ ROTOR   3   INLET     1432.02   718.62    1450.06   1022.04    0.871
+ ROTOR   3   EXIT      1580.75   739.30    1548.51   1016.77    0.872
+ STATOR  3   INLET     1609.90   742.81    1602.84   1014.25    0.873
+ STATOR  3   EXIT      1722.00   755.48    1738.03   1009.10    0.877
+ ROTOR   4   INLET     1754.66   758.90    1779.63   1007.85    0.878
+ ROTOR   4   EXIT      1888.57   769.40    1856.01   1005.81    0.879
+ STATOR  4   INLET     1919.78   771.34    1910.67   1004.29    0.879
+ STATOR  4   EXIT      2002.49   776.65    2020.90   999.88     0.878
+ ROTOR   5   INLET     2036.13   778.62    2057.70   998.11     0.878
+ ROTOR   5   EXIT      2159.87   784.83    2130.36   994.54     0.877
+ STATOR  5   INLET     2180.50   785.79    2170.01   992.54     0.877
+ STATOR  5   EXIT      2246.10   788.66    2258.25   986.71     0.875
+ ROTOR   6   INLET     2324.04   792.51    2347.95   980.75     0.875
+ ROTOR   6   EXIT      2432.20   796.69    2407.58   976.52     0.877
+ STATOR  6   INLET     2447.75   797.20    2444.33   973.78     0.877
+ STATOR  6   EXIT      2515.76   799.30    2518.67   967.96     0.876
+ ROTOR   7   INLET     2536.90   799.88    2559.21   964.71     0.875
+ ROTOR   7   EXIT      2636.66   801.98    2611.66   960.27     0.872
+ STATOR  7   INLET     2653.68   802.28    2648.71   956.90     0.871
+ STATOR  7   EXIT      2712.83   803.52    2716.82   950.37     0.868
+ ROTOR   8   INLET     2733.41   803.31    2749.80   946.73     0.867
+ ROTOR   8   EXIT      2809.14   804.05    2792.48   942.45     0.865
+ STATOR  8   INLET     2827.69   804.16    2827.17   939.31     0.861
+ STATOR  8   EXIT      2895.61   804.43    2892.95   933.82     0.861
+ ROTOR   9   INLET     2967.29   804.67    2983.75   926.24     0.859
+ ROTOR   9   EXIT      3042.90   804.44    3025.75   922.73     0.857
+ STATOR  9   INLET     3064.15   804.46    3059.80   919.87     0.856
+ STATOR  9   EXIT      3116.05   804.59    3119.52   914.85     0.853
+ ROTOR  10   INLET     3134.73   804.62    3147.58   912.24     0.853
+ ROTOR  10   EXIT      3198.58   804.53    3186.81   908.30     0.851
+ STATOR 10   INLET     3218.25   804.56    3213.28   906.02     0.850
+ STATOR 10   EXIT      3265.26   804.68    3269.30   901.90     0.848
+ ROTOR  11   INLET     3282.02   804.72    3293.30   900.14     0.847
+ ROTOR  11   EXIT      3345.96   804.83    3335.00   897.08     0.846
+ STATOR 11   INLET     3365.04   804.86    3358.75   895.38     0.845
+ STATOR 11   EXIT      3412.08   804.94    3417.88   891.24     0.843
+ ROTOR  12   INLET     3478.53   805.04    3486.45   886.62     0.842
+ ROTOR  12   EXIT      3530.82   804.97    3525.41   884.11     0.841
+ STATOR 12   INLET     3552.28   804.94    3549.71   882.60     0.840
+ STATOR 12   EXIT      3595.35   804.87    3596.34   879.78     0.839
+ ROTOR  13   INLET     3616.15   804.83    3627.09   877.90     0.839
+ ROTOR  13   EXIT      3670.84   804.59    3659.97   875.87     0.838
+ STATOR 13   INLET     3699.32   804.57    3697.26   874.16     0.837
+ STATOR 13   EXIT      3740.09   804.57    3741.52   872.73     0.836
+ OGV	     INLET     3767.51   804.80    3767.85   872.29     0.836
+ OGV         EXIT      3831.58   804.75    3831.27   872.30     0.835
+ 
+ ROTOR BLADE GEOMETRY AND STAGE PRESSURE RATIO                                                                 STAGE
+        BLADE                                                                          DELTA   DELTA         PRESSURE
+ STAGE   TYPE  IFORM   S/C    T/C    BETA1   A/C  SHAPEK    O/S   NOB   BETA2 STAGGER   DEVN    LOSS   TCLHR   RATIO
+   1      2      1    0.764  0.058  50.260  0.537  0.500  0.6642   20  28.400  42.570  0.000 -0.0000  0.0046  1.5020
+   2      2      1    0.715  0.067  51.170  0.465  0.500  0.6369   36  31.660  42.010 -0.000 -0.0000  0.0035  1.4850
+   3      2      1    0.754  0.054  53.520  0.417  0.500  0.6170   42  33.020  43.550 -0.000 -0.0000  0.0030  1.4100
+   4      2      1    0.750  0.053  55.830  0.399  0.500  0.6058   48  35.630  44.400 -0.000 -0.0000  0.0057  1.3180
+   5      2      1    0.842  0.059  57.620  0.367  0.500  0.6191   46  35.290  44.840 -0.000 -0.0000  0.0056  1.2880
+   6      3      1    0.926  0.082  0.0000  0.500  0.000  0.6222   48  0.0000  0.0000 -0.000  0.0000  0.0060  1.2010
+   7      3      1    0.792  0.057  0.0000  0.500  0.000  0.6238   63  0.0000  0.0000 -0.000  0.0000  0.0083  1.1970
+   8      3      1    1.010  0.079  0.0000  0.500  0.000  0.6533   65  0.0000  0.0000 -0.000  0.0000  0.0105  1.1800
+   9      3      1    0.997  0.055  0.0000  0.500  0.000  0.6802   67  0.0000  0.0000 -0.000 -0.0000  0.0171  1.1740
+  10      3      1    0.863  0.058  0.0000  0.500  0.000  0.6865   90  0.0000  0.0000 -0.000 -0.0000  0.0153  1.1670
+  11      3      1    0.856  0.077  0.0000  0.500  0.000  0.6731   88  0.0000  0.0000 -0.000 -0.0000  0.0146  1.1530
+  12      3      1    0.913  0.067  0.0000  0.500  0.000  0.6805   92  0.0000  0.0000 -0.000 -0.0000  0.0260  1.1450
+  13      3      1    0.955  0.102  0.0000  0.500  0.000  0.6775   95  0.0000  0.0000 -0.000 -0.0000  0.0334  1.1430
+                                                                
+  
+ STATOR BLADE GEOMETRY AND STATOR EXIT FLOW ANGLE
+        BLADE                                                                          DELTA   DELTA          STATOR
+ STAGE   TYPE  IFORM   S/C    T/C    BETA1   A/C  SHAPEK    O/S   NOB   BETA2 STAGGER   DEVN    LOSS   TCLHS  ALPHA4
+   1      2      1    0.764  0.063  46.120  0.438  0.500  0.7474   34  10.560  26.560  0.000  0.0000  0.0038  20.690
+   2      2      1    0.750  0.069  48.830  0.418  0.500  0.7216   46  13.135  28.190 -0.000 -0.0000  0.0047  22.120
+   3      2      1    0.721  0.065  52.290  0.325  0.500  0.7153   54  22.290  33.860  0.000  0.0000  0.0061  27.860
+   4      2      1    0.794  0.079  53.130  0.359  0.500  0.6715   58  27.940  38.350  0.000  0.0000  0.0115  32.680
+   5      3      1    1.010  0.074  0.0000  0.500  0.000  0.6535   54  0.0000  0.0000 -0.000  0.0000  0.0118  39.310
+   6      3      1    0.778  0.084  0.0000  0.500  0.000  0.6401   72  0.0000  0.0000 -0.000  0.0000  0.0093  38.520
+   7      3      1    0.896  0.067  0.0000  0.500  0.000  0.6514   74  0.0000  0.0000 -0.000  0.0000  0.0131  38.790
+   8      3      1    0.816  0.087  0.0000  0.500  0.000  0.6454   76  0.0000  0.0000 -0.000  0.0000  0.0111  38.450
+   9      3      1    0.896  0.101  0.0000  0.500  0.000  0.6503   78  0.0000  0.0000 -0.000  0.0000  0.0208  38.010
+  10      3      1    0.933  0.085  0.0000  0.500  0.000  0.6727   86  0.0000  0.0000 -0.000 -0.0000  0.0232  36.700
+  11      3      1    0.890  0.112  0.0000  0.500  0.000  0.6591   90  0.0000  0.0000 -0.000  0.0000  0.0181  35.960
+  12      3      1    0.779  0.101  0.0000  0.500  0.000  0.6588  118  0.0000  0.0000 -0.000  0.0000  0.0382  35.280
+  13      3      1    0.787  0.088  0.0000  0.500  0.000  0.6700  120  0.0000  0.0000 -0.000  0.0000  0.0347  35.220 
+
+ OUTLET GUIDE VANE GEOMETRY
+        BLADE                                                                          DELTA   DELTA               
+         TYPE  IFORM   S/C    T/C    BETA1   A/C  SHAPEK    O/S   NOB   BETA2 STAGGER   DEVN    LOSS   TCLHR
+          2      1    0.672  0.080  34.000  0.500  0.500  0.8044  120  -6.500 13.7500 -0.000  0.0000  0.0347 
+
+ INLET BLOCKAGE (PERCENT)
+ HUB      CASING
+ 1.0      1.0
+
+ ANNULUS BLOCKAGE CORRECTION (PERCENT)
+ BLOCKAGE TYPE = 1                              1 - Blockage delta  2 - Total blockage
+ STAGE    ROTOR INLET    ROTOR EXIT    STATOR INLET    STATOR EXIT
+   1         0.000	   0.0000	 0.0000 	0.0000
+   2        -0.000	   0.0000	-0.0000 	0.0000
+   3         0.000	   0.0000	 0.0000 	0.0000
+   4         0.000	   0.0000	 0.0000 	0.0000
+   5         0.000	   0.0000	 0.0000 	0.0000
+   6         0.000	   0.0000	 0.0000 	0.0000
+   7         0.000	   0.0000	 0.0000 	0.0000
+   8         0.000	   0.0000	 0.0000 	0.0000
+   9         0.000	   0.0000	 0.0000 	0.0000
+  10         0.000	   0.0000	 0.0000 	0.0000
+  11        -0.000	   0.0000	 0.0000 	0.0000
+  12         0.000	   0.0000	 0.0000 	0.0000
+  13        -0.000	  -0.0000	-0.0000 	0.0000
+ OGV                                     0.0000 	0.0000
+ 
+  3 BLEEDS SPECIFIED AFTER STAGES    5     8    11
+ BLEED FLOWS (% OF INLET FLOW)    0.67  3.54  6.56
+
+ VARIABLE BLEED SCHEDULE
+ NUMBER OF VARIABLE BLEEDS = 0
+ FRACTION OF
+ DESIGN NRT        1        2        3
+ 0.0              0.2	   0.4	    1.6
+ 0.90             0.1	   0.2	    0.8
+ 0.95             0.05	   0.1	    0.4
+ 1.0              0.	   0.	    0.
+ 1.1              0.	   0.	    0.
+
+ VARIABLE STATORS
+ NUMBER OF VARIABLE STATORS = 3
+ VG(1) = 0.3670
+ VG(2) = 0.3330
+ VG(3) = 0.2000
+
+ ROTOR HPA DESIGN POINT DATA 
+ STAGE   BETA1      DBETA       T/C       AVDR       MACH1
+  6     55.52420   12.97292    0.07398   1.04755    0.64341
+  7     55.25884   14.05418    0.05674   1.04419    0.61360
+  8     54.77061   15.02062    0.07830   1.04470    0.59350
+  9     53.74227   16.15464    0.05386   1.04025    0.57318
+ 10     51.65451   15.92784    0.05773   1.03283    0.55626
+ 11     52.35553   16.57000    0.07725   1.03831    0.54550
+ 12     52.35884   16.62000    0.06697   1.03633    0.53267
+ 13     52.22032   16.17000    0.10100   1.02589    0.52620
+ 
+ STATOR HPA DESIGN POINT DATA
+ STAGE   BETA1      DBETA       T/C       AVDR       MACH1
+  5     55.02444   15.70000    0.07420   1.06470    0.58709
+  6     53.29000   14.94344    0.08423   1.04347    0.57776
+  7     54.13187   15.51293    0.06845   1.05621    0.57361
+  8     53.88000   15.77974    0.08710   1.05697    0.56937
+  9     53.21000   15.30000    0.10197   1.04519    0.56166
+ 10     52.47844   15.96000    0.08521   1.04453    0.55545 
+ 11     52.55000   16.61856    0.11183   1.04442    0.54183 
+ 12     52.09900   16.96842    0.05762   1.03680    0.52847 
+ 13     52.12371   16.81867    0.08800   1.02082    0.51380 
+ 
+ LOSS MODEL                   = 1               0 - Miller-Wright   1 - Calvert's revisions
+ SURGE MODEL                  = 5               1 - Density ratio   2 - Static pressure ratio  3 - Total pressure ratio  4 - Eta*Cp*DT  5 - PGK
+ INCIDENCE TYPE               = 2               1 - Zero incidence  2 - Minimum loss incidence
+ TIP CLEARANCE TYPE           = 1               1 - Clearance over height   2 - In millimeters
+ DELTA LOSS FOR ALL ROWS      = 0.0 
+ DELTA DEVIATION FOR ALL ROWS = -0.732
+ LOSS FACTOR FOR ALL ROWS     = 1.0 
+ BLOCKAGE FACTOR FOR ALL ROWS = 1.0
+
+ HPA MINIMUM LOSS CORR.       = 1.884           OMKOR_HPA2
+ HPA OPERATING RANGE CORR.    = 1.0             ABKOR_HPA2
+ CDA DEVIATION CORRECTION     = 1.0             DEVKOR
+ CDA MAXIMUM CAMBER CORR.     = 12.0            PMCKOR
+ CDA DIFFUSION CORRECTION     = 0.25            DIFKOR
+ CDA CHOKE CHARACTERISTIC EXP = 3.0             ECHOKE_CDA
+ CDA SURGE CHARACTERISTIC EXP = 3.0             ESURGE_CDA
+ CDA REF. INCIDENCE CORR.     = 0.110           DSLOPE
+ CDA MINIMUM LOSS CORRECTION  = 2.016           OMEKOR_CDA
+ CDA TRANSONIC LOSS CORR.     = 0.60            TLOKOR
+ CDA SUPERCRITICAL LOSS EXP   = 5.0             ESUKRI
+ CDA SUPERCRITICAL LOSS EXP   = 0.03            SMAKOR_CDA
+ NACA CHOKE CHARACTERISTIC EXP= 2.0             ECHOKE
+ NACA SURGE CHARACTERISTIC EXP= 2.0             ESURGE
+ NACA MINIMUM LOSS CORRECTION = 1.14            OMEKOR_NCA
+
+ DIFFUSER CALIBRATION FACTOR  = 1.0
+ DIFFUSER AREA RATIO          = 2.2791
+
+ AT DESIGN POINT :
+         SHAFT SPEED          = 3708.64
+         MASS FLOW            = 547.837
+         AMBIENT TEMPERATURE  = 31.41
+         AMBIENT REL HUMIDITY = 25.37
+         INLET FLANGE PRESSURE= 1.0077
+         SCROLL CALIB. COEFF. = 1.0
+         IGV POSITION         = 5.48		POSITIVE IS CLOSED
+         USE GIVEN IGV DP/Pin = 0		0 - NO   1 - YES
+         IGV DELTA P / Pin    = 0.005
+         USE GIVEN R1 ALPHA   = 1		0 - NO   1 - YES
+         IGV EXIT ANGLE COEFF.= 0.9726
+         ROTOR 1 INLET ALPHA  = 15.62  		AT THE NOMINAL IGV POSITION
+
+ NUMBER OF SPEEDLINES = 1
+ NO OF PTS    TEMP    SHAFT SPEED    REL HUMIDITY    MASS FLOW
+     1        31.41      3708.72          25.37      547.837
+
