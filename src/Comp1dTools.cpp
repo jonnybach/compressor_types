@@ -6,6 +6,7 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
+
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -21,26 +22,18 @@
 #include "CompressorSpeedLine.h"
 #include "StringTrimmers.h"
 
+
 using namespace std;
 
 
 static const string version("0.2");
 
 
-//create constants that will be used throughout cpp file
-static const string speedLineHdr("OVERALL RESULTS FOR SPEEDLINE");
-static const string speedLinePntsHdr("POINT    TIN    PIN     WCORR     PR     DT/T   ETAADI  ETAPOLY  WCORROUT");
-
-static const string stageSmryHdrStg("STAGE");
-static const string stageSmryHdrSmry("SUMMARY");
-static const string stageSmryHdrOgv("OGV");
-
-
 //function prototype declarations
 vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName);
+void getStagePerformance(ifstream &fileToParse, CompressorStage *stage);
+void getOgvPerformance(ifstream &fileToParse, CompressorStage *ogv);
 void showHelp();
-void getStagePerformance(ifstream& fileToParse, CompressorStage* stage);
-void getOgvPerformance(ifstream& fileToParse, CompressorStage* ogv);
 
 //function definitions
 int main(int argc, char *argv[]) {
@@ -97,10 +90,11 @@ int main(int argc, char *argv[]) {
     //get remaining non-option command arguments
     int index = 0;
     for (index = optind; index < argc; index++) {
-    	if (index == (argc-2)) {
-    		//argument is input file name
-    		infileName = argv[index];
-    	} else if (index == (argc-1)) {
+    	//if (index == (argc-2)) {
+    	//	//argument is input file name
+    	//	infileName = argv[index];
+    	//} else
+    	if (index == (argc-1)) {
     		//argument is output file name
     		outfileName = argv[index];
     	}
@@ -149,6 +143,15 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 	//open output file and read speed line results
 	//interpolate mass flow for user specified pressure ratio
 
+	const string speedLineHdr("OVERALL RESULTS FOR SPEEDLINE");
+
+	//Comp1d (v1.2) - static const string speedLinePntsHdr("POINT    TIN    PIN     WCORR     PR     DT/T   ETAADI  ETAPOLY  WCORROUT");
+	const string speedLinePntsHdr("POINT     FLOW     WCORR     WCORR    DT/T     PR     ETAADI  ETAPOLY     PR     ETAADI  ETAPOLY");
+
+	const string stageSmryHdrStg("STAGE");
+	const string stageSmryHdrSmry("SUMMARY");
+	const string stageSmryHdrOgv("OGV");
+
 	vector<string> lineParts;
 
 	CompressorSpeedLine *crntSpeedLine;
@@ -162,6 +165,7 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 
 	string line;
 	double crntSpeed;
+	double crntTamb;
 
 	//open a file input stream
 	ifstream myfile (outfileName.data(), ifstream::in);
@@ -186,6 +190,7 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 				//create a new compressor speed line object and set shaft speed
 				crntSpeedLine = new CompressorSpeedLine;
 				crntSpeed = atof(lineParts[6].c_str());
+				crntTamb = atof(lineParts[8].c_str());
 				crntSpeedLine->setShaftSpeed(crntSpeed);
 				crntSpeedLine->setStages(stages);
 
@@ -211,14 +216,14 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 						//assign each part of the line data to the operating point
 						tmpOpPnt = new CompressorOperatingPoint;
 						tmpOpPnt->setOperatingPoint( atoi(lineParts[0].c_str())
-								, atof(lineParts[1].c_str())
-								, atof(lineParts[2].c_str())
-								, atof(lineParts[4].c_str())
-								, atof(lineParts[5].c_str())
-								, atof(lineParts[6].c_str())
-								, atof(lineParts[7].c_str())
-								, atof(lineParts[3].c_str())
+								, crntTamb
+								, -9999
 								, atof(lineParts[8].c_str())
+								, atof(lineParts[4].c_str())
+								, atof(lineParts[9].c_str())
+								, atof(lineParts[10].c_str())
+								, atof(lineParts[2].c_str())
+								, atof(lineParts[3].c_str())
 								, crntSpeedLine->getShaftSpeed());
 
 						//add operating point to vector of operating points
@@ -255,7 +260,8 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 				line.find(stageSmryHdrOgv, 0 ) != string::npos
 				&& line.find(stageSmryHdrSmry, 0 ) != string::npos
 				) {
-				// found OGV stage data
+				// found compressor OGV stage data
+
 				string tmpStgName = "ogv";
 
 				//instantiate a new compressor stage object
@@ -283,7 +289,7 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 
 }
 
-void getStagePerformance(ifstream& fileToParse, CompressorStage* stage) {
+void getStagePerformance(ifstream &fileToParse, CompressorStage *stage) {
 
 	//now that the start of the stage by stage performance output has been found, read all the data
 
@@ -394,7 +400,7 @@ void getStagePerformance(ifstream& fileToParse, CompressorStage* stage) {
 
 }
 
-void getOgvPerformance(ifstream& fileToParse, CompressorStage* stage) {
+void getOgvPerformance(ifstream &fileToParse, CompressorStage *stage) {
 
 	static const string stageSmryDataHdr1("POINT   ALF3   ALF4   DEFS     WS    MNS    DFS   INCS");
 	static const string stageSmryDataHdr2("POINT    PS3    PS4    PT3    PT4    T0    DEVS");
