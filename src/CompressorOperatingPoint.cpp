@@ -13,8 +13,8 @@ CompressorOperatingPoint::CompressorOperatingPoint() {
 }
 
 CompressorOperatingPoint::CompressorOperatingPoint(int opPntNmbr, double inletTemp, double inletPress
-		, double pressRatio, double delTqT, double etaAdi, double etaPoly, double wCorct, double wCorctOut
-		, double speed) {
+		, double pressRatio, double delTqT, double etaAdi, double etaPoly, double wCorct
+		, double wCorctOut, double wInlet, double speed) {
 
 	_opPntNmbr = opPntNmbr;
 	_tempIn = inletTemp;
@@ -25,6 +25,7 @@ CompressorOperatingPoint::CompressorOperatingPoint(int opPntNmbr, double inletTe
 	_etaPoly = etaPoly;
 	_wCorct = wCorct;
 	_wCorctOut = wCorctOut;
+	_wInlet = wInlet;
 	_speed = speed;
 
 }
@@ -36,7 +37,7 @@ CompressorOperatingPoint::~CompressorOperatingPoint() {
 
 void CompressorOperatingPoint::setOperatingPoint(int opPntNmbr, double inletTemp, double inletPress
 		, double pressRatio, double delTqT, double etaAdi, double etaPoly, double wCorct, double wCorctOut
-		, double speed) {
+		, double wInlet, double speed) {
 
 	_opPntNmbr = opPntNmbr;
 	_tempIn = inletTemp;
@@ -47,11 +48,13 @@ void CompressorOperatingPoint::setOperatingPoint(int opPntNmbr, double inletTemp
 	_etaPoly = etaPoly;
 	_wCorct = wCorct;
 	_wCorctOut = wCorctOut;
+	_wInlet = wInlet;
 	_speed = speed;
 
 }
 
 //accessors
 double CompressorOperatingPoint::getWcorct() { return _wCorct; }
+double CompressorOperatingPoint::getWin() { return _wInlet; }
 double CompressorOperatingPoint::getEtaAdi() { return _etaAdi; }
 double CompressorOperatingPoint::getPressRatio() { return _pressRatio; }

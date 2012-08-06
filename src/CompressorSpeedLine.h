@@ -28,7 +28,7 @@ public:
 
 	double calcMassFlow(double pressureRatio);
 	double calcEtaAdi(double pressureRatio);
-	void calcMassAndEta(double pressureRatio, double *wCorrctIn, double *etaAdiab);
+	void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
 
 	//shaft speed accessors

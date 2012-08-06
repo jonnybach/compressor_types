@@ -26,7 +26,7 @@
 using namespace std;
 
 
-static const string version("0.2");
+static const string version("0.3");
 
 
 //function prototype declarations
@@ -125,15 +125,15 @@ int main(int argc, char *argv[]) {
 	}
 
 	//calculate the mass flow for the given pressure ratio
-	double wCrrctIn, etaAdaib;
-	speedLines[0]->calcMassAndEta(pRatio, &wCrrctIn, &etaAdaib);
+	double wIn,etaAdaib;
+	speedLines[0]->calcMassAndEta(pRatio, &wIn, &etaAdaib);
 	CompressorStagePerformance intrpStgPerf1 = speedLines[0]->getStagePerfForPressureRatio(1, pRatio);
 	CompressorStagePerformance intrpStgPerf2 = speedLines[0]->getStagePerfForPressureRatio(2, pRatio);
 	CompressorStagePerformance intrpStgPerf5 = speedLines[0]->getStagePerfForPressureRatio(5, pRatio);
 	CompressorStagePerformance intrpStgPerf8 = speedLines[0]->getStagePerfForPressureRatio(8, pRatio);
 
-	cout << "Press_Ratio\tW_Crct_In\tEta_Adiab\tPt1_Sin\tPt2_Sin\tPt5_Sin\tPt8_Sin\n";
-	cout << pRatio << "\t" << wCrrctIn << "\t" << etaAdaib << "\t" << intrpStgPerf1.getPt3() << "\t" << intrpStgPerf2.getPt3() << "\t" << intrpStgPerf5.getPt3() << "\t" << intrpStgPerf8.getPt3() << "\n";
+	cout << "Press_Ratio\tW_In\tEta_Adiab\tPt1_Sin\tPt2_Sin\tPt5_Sin\tPt8_Sin\n";
+	cout << pRatio << "\t" << wIn << "\t" << etaAdaib << "\t" << intrpStgPerf1.getPt3() << "\t" << intrpStgPerf2.getPt3() << "\t" << intrpStgPerf5.getPt3() << "\t" << intrpStgPerf8.getPt3() << "\n";
 
 	return 0;
 
@@ -224,6 +224,7 @@ vector<CompressorSpeedLine*> readComp1dOutfile(string outfileName) {
 								, atof(lineParts[10].c_str())
 								, atof(lineParts[2].c_str())
 								, atof(lineParts[3].c_str())
+								, atof(lineParts[1].c_str())
 								, crntSpeedLine->getShaftSpeed());
 
 						//add operating point to vector of operating points

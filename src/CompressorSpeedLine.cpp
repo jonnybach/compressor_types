@@ -46,11 +46,11 @@ double CompressorSpeedLine::calcMassFlow(double pressureRatio) {
 	std::vector<CompressorOperatingPoint>::iterator it;
 	for ( it=_opPnts.begin() ; it < _opPnts.end(); it++, i++) {
 		pRatio[i] = it->getPressRatio();
-		massFlow[i] = it->getWcorct();
+		massFlow[i] = it->getWin();
 	}
 
-	double wCorctInterp = LinearInterpUnsorted(numElems, pRatio, massFlow, pressureRatio, 1);
-	return wCorctInterp;
+	double wInterp = LinearInterpUnsorted(numElems, pRatio, massFlow, pressureRatio, 1);
+	return wInterp;
 
 }
 
@@ -74,13 +74,13 @@ double CompressorSpeedLine::calcEtaAdi(double pressureRatio) {
 
 }
 
-void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wCorrctIn, double *etaAdiab) {
+void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab) {
 	//interpolates the mass flow for a given
 
 	//create arrays of pressure ratio and mass flow
 	int numElems = _opPnts.size();
 	double pRatio[numElems];
-	double wCrctIn[numElems];
+	double wInlet[numElems];
 	double etaAdi[numElems];
 
 	double pRatioMin = 1e9;
@@ -90,7 +90,7 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wCorrctIn
 	std::vector<CompressorOperatingPoint>::iterator it;
 	for ( it=_opPnts.begin() ; it < _opPnts.end(); it++, i++) {
 		pRatio[i] = (*it).getPressRatio();
-		wCrctIn[i] = (*it).getWcorct();
+		wInlet[i] = (*it).getWin();
 		etaAdi[i] = (*it).getEtaAdi();
 
 		pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
@@ -98,7 +98,7 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wCorrctIn
 
 	}
 
-	double wCorctInterp;
+	double wInterp;
 	double etaAdiInterp;
 
 	//check if pressureRatio is outside min and max bounds of pRatio array
@@ -106,7 +106,7 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wCorrctIn
 	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin) ) {
 		//pressureRatio is below min pRatio from array, use linear extrapolation
 
-		wCorctInterp = LinearInterpUnsorted(numElems, pRatio, wCrctIn, pressureRatio, 1);
+		wInterp = LinearInterpUnsorted(numElems, pRatio, wInlet, pressureRatio, 1);
 		etaAdiInterp = LinearInterpUnsorted(numElems, pRatio, etaAdi, pressureRatio, 1);
 
 	} else {
@@ -117,9 +117,9 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wCorrctIn
 
 		//initialize the w corrected spline type
 		gsl_spline *wSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-		gsl_spline_init(wSpline, pRatio, wCrctIn, numElems);
-		wCorctInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
-		if ( gsl_isnan(wCorctInterp) ) {
+		gsl_spline_init(wSpline, pRatio, wInlet, numElems);
+		wInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
+		if ( gsl_isnan(wInterp) ) {
 			//throw exception
 		}
 
@@ -141,7 +141,7 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wCorrctIn
 
 	}
 
-	*wCorrctIn = wCorctInterp;
+	*wIn = wInterp;
 	*etaAdiab = etaAdiInterp;
 
 }

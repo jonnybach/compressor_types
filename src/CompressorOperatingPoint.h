@@ -22,6 +22,7 @@ public:
 			, double etaPoly
 			, double wCorct
 			, double wCorctOut
+			, double wInlet
 			, double speed);
 	virtual ~CompressorOperatingPoint();
 
@@ -34,10 +35,12 @@ public:
 			, double etaPoly
 			, double wCorct
 			, double wCorctOut
+			, double wInlet
 			, double speed);
 
 	//accessors (properties)
 	double getWcorct();
+	double getWin();
 	double getEtaAdi();
 	double getPressRatio();
 
@@ -52,6 +55,7 @@ private:
 	double _etaPoly;		//polytropic efficiency from IGV in to OGV out
 	double _wCorct;			//inlet corrected flow - kg/s
 	double _wCorctOut;		//outlet corrected flow - kg/s
+	double _wInlet;			//absolute mass flow at inlet - kg/s
 	double _speed;			//shaft speed - RPM
 
 };
