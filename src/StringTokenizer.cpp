@@ -31,7 +31,7 @@ vector<string> removeWhiteSpaceElems(vector<string> &elems) {
 
 	vector<string>::iterator it;
 	for ( it=elems.begin() ; it != elems.end(); it++ ) {
-		if (*it != "") {
+		if (*it != "" && *it != " ") {
 			newElems.push_back(*it);
 		}
 	}

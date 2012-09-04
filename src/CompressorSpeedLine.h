@@ -40,7 +40,6 @@ private:
 	std::vector<CompressorOperatingPoint> _opPnts;
 	std::vector<CompressorStage *> _stages;
 	double _shaftSpeed; //rpm
-	bool testIt;
 
 };
 

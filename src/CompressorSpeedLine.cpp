@@ -19,7 +19,6 @@ extern "C" {
 
 CompressorSpeedLine::CompressorSpeedLine() {
 	// TODO Auto-generated constructor stub
-	testIt = true;
 	_shaftSpeed = 10;
 }
 

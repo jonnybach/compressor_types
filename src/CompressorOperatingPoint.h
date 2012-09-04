@@ -17,6 +17,7 @@ public:
 			, double inletTemp
 			, double inletPress
 			, double pressRatio
+			, double phi
 			, double delTqT
 			, double etaAdi
 			, double etaPoly
@@ -30,6 +31,7 @@ public:
 			, double inletTemp
 			, double inletPress
 			, double pressRatio
+			, double phi
 			, double delTqT
 			, double etaAdi
 			, double etaPoly
@@ -38,7 +40,11 @@ public:
 			, double wInlet
 			, double speed);
 
-	//accessors (properties)
+
+	double getTamb();
+	double getPamb();
+	double getPhi();
+	double getShaftSpeed();
 	double getWcorct();
 	double getWin();
 	double getEtaAdi();
@@ -49,7 +55,8 @@ private:
 	int _opPntNmbr;
 	double _tempIn;			//compressor inlet temperatur - kelvin
 	double _pressIn;		//compressor inlet pressure - Pa
-	double _pressRatio;		//pressure ration from IGV in to OGV out
+	double _pressRatio;		//pressure ratio from IGV in to OGV out
+	double _phi;			//retlative humidity;
 	double _delTqT;			//non-dim temp change from IGV in to OGV out
 	double _etaAdi;			//adiabatic efficiency from IGV in to OGV out
 	double _etaPoly;		//polytropic efficiency from IGV in to OGV out

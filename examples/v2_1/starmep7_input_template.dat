@@ -1,0 +1,244 @@
+!--------------------------------------------------------------------------------------------------------------------------------------
+! STARMEP 7.x INPUT DATASET
+!--------------------------------------------------------------------------------------------------------------------------------------
+{COMPRESSOR_TYPE}						                              ! COMPRESSOR TYPE
+{PROJECT}								                              ! PROJECT
+{DATE}			                                                      ! DATE
+{COMMENT1}                                                            ! COMMENT
+{COMMENT2}                                                            ! COMMENT
+{COMMENT3}                                                            ! COMMENT
+!--------------------------------------------------------------------------------------------------------------------------------------
+! GENERAL SETTINGS
+!--------------------------------------------------------------------------------------------------------------------------------------
+{STRM_LINES}   ! NJSTRMS    [-]       NUMBER OF STREAMLINES
+300            ! NLOOP      [-]       MAXIMUM NUMBER OF ITERATIONS
+  1            ! IWRF       [-]       PRINTOUT FLOW DESCRIPTION        (0 = NO; 1 = YES)
+  1            ! IWRB       [-]       PRINTOUT PERFORMANCE OF BLADING  (0 = NO; 1 = YES)
+  1            ! IWRM       [-]       PRINTOUT PERFORMANCE OF MACHINE  (0 = NO; 1 = YES)
+  1            ! IWRC       [-]       PRINTOUT ANALYSIS FOR BLADE ROW  (0 = NO; 1 = YES)
+!--------------------------------------------------------------------------------------------------------------------------------------
+! SOLUTION TOLERANCE AND RELAXATION FACTOR
+!--------------------------------------------------------------------------------------------------------------------------------------
+0.000100       ! TOLNCE     [-]       TOLERANCE FOR ITERATIVE SOLUTION
+0.500          ! FRELAX     [-]       RELAXATION FACTOR
+!--------------------------------------------------------------------------------------------------------------------------------------
+! AMBIENT CONDITIONS
+!--------------------------------------------------------------------------------------------------------------------------------------
+{TAMB}		  ! TAMB       [DEG C]   STATIC AMBIENT TEMPERATURE
+{PAMB}         ! PAMB       [BAR]     STATIC AMBIENT PRESSURE
+{PHI}         ! PHIH2O     [%]       HUMIDITY
+!--------------------------------------------------------------------------------------------------------------------------------------
+! RADIAL STREAMLINE DISTRIBUTION
+!--------------------------------------------------------------------------------------------------------------------------------------
+0.900          ! FX         [-]       RADIAL STREAMLINE CONTRACTION FACTOR
+1.500          ! EFX        [-]       = 1.0: RADII SIGNIFICANT FOR STREAMLINE CONTRACTION
+!                                     = 2.0: AREAS SIGNIFICANT FOR STREAMLINE CONTRACTION
+1.500          ! EDFX       [-]       > 1.0: INCREASE OF RADIAL STREAMLINE CONTRACTION NEAR ENDWALL
+!                                     < 1.0: DECREASE OF RADIAL STREAMLINE CONTRACTION NEAR ENDWALL
+0.500          ! EDAMP      [-]       DAMPING FACTOR FOR THE CALCULATION OF STREAMLINE CURVATURE AND STREAMLINE SLOPE
+!--------------------------------------------------------------------------------------------------------------------------------------
+! ENDWALL BLOCKAGE (ONLY POSSIBLE WHEN IMISCH = 0)
+!--------------------------------------------------------------------------------------------------------------------------------------
+0              ! IWBLCKG    [-]       INDICATOR FOR ENDWALL BLOCKAGE
+!                                     = 0: NO ENDWALL BLOCKAGE
+!                                     = 1: CALCULATED ENDWALL BLOCKAGE
+!                                     = 2: LINEAR INTERPOLATION OF ENDWALL BLOCKAGE USING WBL_START AND WBL_END
+0.0            ! WBL_START  [-]       ENDWALL BLOCKAGE AT LE IGV (RELATIVE SPAN)
+0.0            ! WBL_END    [-]       ENDWALL BLOCKAGE AT TE LAST STATOR (RELATIVE SPAN)
+!--------------------------------------------------------------------------------------------------------------------------------------
+! SECONDARY LOSS/DEVIATION MODEL (ONLY POSSIBLE WHEN IMISCH = 1)
+!--------------------------------------------------------------------------------------------------------------------------------------
+0              ! ISEC      [-]       INDICATOR FOR SECONDARY LOSS/DEVIATION MODEL
+!                                     = 0: MODEL OFF
+!                                     = 1: MODEL ON
+!--------------------------------------------------------------------------------------------------------------------------------------
+! RADIAL MIXING AND 3D LOSS/DEVIATION MODEL
+!--------------------------------------------------------------------------------------------------------------------------------------
+1              ! IMISCH     [-]       INDICATOR FOR RADIAL MIXING AND ENDWALL LOSS/DEVIATION MODEL
+!                                     = 0: MODEL OFF
+!                                     = 1: MODEL ON
+0.0040         ! RMC        [-]       MIXING COEFFICIENT
+0.90           ! PRT        [-]       TURBULENT PRANDTL NUMBER
+!--------------------------------------------------------------------------------------------------------------------------------------
+! FOLLOWING PARAMETERS MUST BE SET IF IMISCH = 1
+!--------------------------------------------------------------------------------------------------------------------------------------
+1.0E-04        ! RMTMAM     [-]       MAXIMUM EDDY VISCOSITY IN AXIAL DIRECTION
+1.0E-04        ! RMTMAU     [-]       MAXIMUM EDDY VISCOSITY IN CIRCUMFERENTIAL DIRECTION
+1.5E-04        ! RMTMSM     [-]       MAXIMUM EDDY VISCOSITY AT ROTOR TIP / CASING IN AXIAL DIRECTION
+1.0E-04        ! RMTMSU     [-]       MAXIMUM EDDY VISCOSITY AT ROTOR TIP / CASING IN CIRCUMFERENTIAL
+0.50000        ! FQV        [-]       FACTOR USED IN THE LAMINAR SUBLAYER CALCULATION
+0.00010        ! GSUBA      [% SPAN]  THICKNESS OF DECELERATED LAMINAR SUBLAYER
+0.00040        ! GSUBB      [% SPAN]  THICKNESS OF LAMINAR SUBLAYER FOR CONSTANT VELOCITY
+0.00200        ! GSUBC      [% SPAN]  THICKNESS OF ACCELERATED LAMINAR SUBLAYER
+1.00000        ! GSUBD      [-]       FACTOR TO TAKE THE EFFECTS OF TIP CLEARANCE INTO ACCOUNT
+!                                     0.0 => FIXED WALL IN THE LOCAL FRAME OF REFERENCE
+!                                     1.0 => ROTATING WALL IN THE LOCAL FRAME OF REFERENCE
+! INLET CONDITION OF ROTORS (IN THE STATIONARY FRAME OF REFERENCE)
+0.0            ! FRUR1N(1)  [-]       STREAMLINE AT HUB (ICASE=1)
+1.0            ! FRUR1N(2)  [-]       STREAMLINE AT HUB (ICASE=2)
+0.0            ! FRUR1G(1)  [-]       STREAMLINE AT CASING (ICASE=1)
+0.0            ! FRUR1G(2)  [-]       STREAMLINE AT CASING (ICASE=2)
+! OUTLET CONDITION OF ROTORS (IN THE RELATIV (ROTATING) FRAME OF REFERENCE)
+0.0            ! FRUR2N(1)  [-]       STREAMLINE AT HUB (ICASE=1)
+0.0            ! FRUR2N(2)  [-]       STREAMLINE AT HUB (ICASE=2)
+0.0            ! FRUR2G(1)  [-]       STREAMLINE AT CASING (ICASE=1)
+1.0            ! FRUR2G(2)  [-]       STREAMLINE AT CASING (ICASE=2)
+! INLET CONDITION OF STATORS (IN THE STATIONARY FRAME OF REFERENCE)
+1.0            ! FRUS1N(1)  [-]       STREAMLINE AT HUB (ICASE=1)
+1.0            ! FRUS1N(2)  [-]       STREAMLINE AT HUB (ICASE=2)
+1.0            ! FRUS1G(1)  [-]       STREAMLINE AT CASING (ICASE=1)
+0.0            ! FRUS1G(2)  [-]       STREAMLINE AT CASING (ICASE=2)
+! OUTLET CONDITION OF STATORS (IN THE STATIONARY FRAME OF REFERENCE)
+0.0            ! FRUS2N(1)  [-]       STREAMLINE AT HUB (ICASE=1)
+1.0            ! FRUS2N(2)  [-]       STREAMLINE AT HUB (ICASE=2)
+0.0            ! FRUS2G(1)  [-]       STREAMLINE AT CASING (ICASE=1)
+0.0            ! FRUS2G(2)  [-]       STREAMLINE AT CASING (ICASE=2)
+!--------------------------------------------------------------------------------------------------------------------------------------
+! STATOR LEAKAGE
+!--------------------------------------------------------------------------------------------------------------------------------------
+1              ! FLEAK      [-]       INDICATOR FOR STATOR LEAKAGE CALCULATION FLOW
+!                                     = 0.0:          NO LEAKAGE MASS FLOW
+!                                     = 0.0<FLEAK<1.0 LEAKAGE MASS FLOW RATE IS REDUCED TO (CALCULATED MASS FLOW RATE*FLEAK)
+!                                     = 1.0:          STANDARD KWU LEAKAGE MODELL (FULL LEAKAGE MASS FLOW RATE IS USED)
+0.45           ! FULEAK     [-]       = 0.0<FULEAK<1.0: MULTIPLICATOR OF CIRCUMFERENTIAL VELOCITY COMPONENT
+0.004000       ! TLAB       [M]       AVERAGED AXIAL DISTANCE OF SEAL-POINTS
+0.001550       ! SLAB       [M]       RADIAL GAP OF SEAL-POINTS
+0.46390        ! DRLAB1     [-]       PARAMETER FOR CALCULATION HUB SEAL RADIUS FIRST STAGE
+0.88820        ! DRLAB2     [-]       PARAMETER FOR CALCULATION HUB SEAL RADIUS LAST STAGE
+1.26000        ! FBLAB1     [-]       PARAMETER FOR CALCULATION AXIAL HUB SEAL WIDTH FIRST STAGE
+1.23500        ! FBLAB2     [-]       PARAMETER FOR CALCULATION AXIAL HUB SEAL WIDTH LAST STAGE
+1.00000        ! EQUIGAP    [-]       EQUIVALENT GAP FOR LOSS CALCULATION
+!--------------------------------------------------------------------------------------------------------------------------------------
+! INLET GUIDE VANE LAW
+!--------------------------------------------------------------------------------------------------------------------------------------
+{DEL_IGV}      ! DALLE0     [DEG]     ANGLE OF ADJUSTMENT(+ OPEN; - CLOSE)
+{K_VGV0}       ! VG(0)      [-]       VG(0) * DALLE0 = ANGLE OF ADJUSTMENT OF LE00
+{K_VGV1}       ! VG(1)      [-]       VG(1) * DALLE0 = ANGLE OF ADJUSTMENT OF LE01
+{K_VGV2}       ! VG(2)      [-]       VG(2) * DALLE0 = ANGLE OF ADJUSTMENT OF LE02
+{K_VGV3}       ! VG(3)      [-]       VG(3) * DALLE0 = ANGLE OF ADJUSTMENT OF LE03
+!--------------------------------------------------------------------------------------------------------------------------------------
+! BLADE CHARACTERISTICS NACA (IARC = 0) AND DCA (IARC = 1)
+!--------------------------------------------------------------------------------------------------------------------------------------
+{ECHOKE_NCA}   ! ECHOKE     [-]       EXPONENT OF CHOKE CHARACTERISTIC
+{ESURGE_NCA}   ! ESURGE     [-]       EXPONENT OF SURGE CHARACTERISTIC
+{OMEKOR_NCA}   ! OMEKOR_NCA [-]       MINIMUM LOSS CORRECTION NACA
+!--------------------------------------------------------------------------------------------------------------------------------------
+! BLADE CHARACTERISTICS CDA (IARC = 2)
+!--------------------------------------------------------------------------------------------------------------------------------------
+{DEVKOR_CDA}       ! DEVKOR     [-]       DEVIATION CORRECTION
+{PMCKOR_CDA}       ! PMCKOR     [-]       LOCAL MAXIMUM CAMBER CORRECTION
+{DIFKOR_CDA}       ! DIFKOR     [-]       DIFFUSION CORRECTION
+{ECHOKE_CDA}       ! ECHOKE_CDA [-]       EXPONENT OF CHOKE CHARACTERISTIC
+{ESURGE_CDA}       ! ESURGE_CDA [-]       EXPONENT OF SURGE CHARACTERISTIC
+{DSLOPE_CDA}       ! DSLOPE     [-]       REFERENCE INCIDENCE CORRECTION
+{OMEKOR_CDA}       ! OMEKOR_CDA [-]       MINIMUM LOSS CORRECTION CDA
+{TLOKOR_CDA}       ! TLOKOR     [-]       TRANSONIC LOSS CORRECTION
+{ESUKRI_CDA}       ! ESUKRI     [-]       EXPONENT FOR SUPERCRITICAL LOSS
+{SMAKOR_CDA}       ! SMAKOR_CDA [-]       EXPONENT FOR SUPERCRITICAL LOSS
+!--------------------------------------------------------------------------------------------------------------------------------------
+! BLADE CHARACTERISTICS HPA (IARC = 3)
+!--------------------------------------------------------------------------------------------------------------------------------------
+{OMEKOR_HPA}       ! OMKOR_HPA2 [-]       MINIMUM LOSS CORRECTION HPA
+{ABKOR_HPA}        ! ABKOR_HPA2 [-]       OPERATING RANGE CORRECTION HPA
+!--------------------------------------------------------------------------------------------------------------------------------------
+! DIFFUSOR / BLEED
+!--------------------------------------------------------------------------------------------------------------------------------------
+{DIFF_AR}          ! QADIF      [-]       DIFFUSOR AREA RATIO
+!                                     < 0.0: DIFFUSOR AREA RATIO CALCULATED WITH GIVEN HUB AND CASING COORDINATES 
+!                                     > 0.0: DIFFUSOR AREA RATIO DEFINED BY QADIF AND AREA BEHIND LAST STATOR 
+0.640          ! ETADIF     [%]       DIFFUSOR EFFICIENCY
+0.00453        ! DPVE       [bar]     TOTAL PRESSURE LOSS BELLMOUTH
+1.000          ! ETABLD     [%]       BLEED EFFICIENCY
+!--------------------------------------------------------------------------------------------------------------------------------------
+! RADIAL CLEARANCE MODEL
+!--------------------------------------------------------------------------------------------------------------------------------------
+0               ! FCL         [-]     INDICATOR FOR RADIAL CLEARANCE CALCULATION
+!                                     = 0:          RADIAL CLEARANCE MODEL OFF
+!                                     = 1:          RADIAL CLEARANCE MODEL ON
+0.875           ! OMKOR_TCL   [-]     LOSS CORRECTION OF THE CLEARANCE LOSS
+0.670           ! OMKOR_PROF  [-]     LOSS CORRECTION OF THE CLEARANCE LOSS
+!
+! BLADES: HOT RUNNING RADIAL CLEARANCES [MM]
+! LA01|LA02|LA03|LA04|LA05|LA06|LA07|LA08|LA09|LA10|LA11|LA12|LA13|LA14|LA15|LA16|LA17|LA18|LA19|LA20|
+!--------------------------------------------------------------------------------------------------------------------------------------
+  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+!
+! VANES: HOT RUNNING RADIAL CLEARANCES [MM] (0.0 = SHROUDED VANES)
+! LE01|LE02|LE03|LE04|LE05|LE06|LE07|LE08|LE09|LE10|LE11|LE12|LE13|LE14|LE15|LE16|LE17|LE18|LE19|LE20|
+!--------------------------------------------------------------------------------------------------------------------------------------
+  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+!--------------------------------------------------------------------------------------------------------------------------------------
+! SURFACE ROUGHNESS OF ROTORS RZ [1/1000 mm]
+! 
+! LA01|LA02|LA03|LA04|LA05|LA06|LA07|LA08|LA09|LA10|LA11|LA12|LA13|LA14|LA15|LA16|LA17|LA18|LA19|LA20|
+!--------------------------------------------------------------------------------------------------------------------------------------
+  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+!--------------------------------------------------------------------------------------------------------------------------------------
+! SURFACE ROUGHNESS OF STATORS RZ [1/1000 mm]
+! 
+! LE00|LE01|LE02|LE03|LE04|LE05|LE06|LE07|LE08|LE09|LE10|LE11|LE12|LE13|LE14|LE15|LE16|LE17|LE18|LE19|
+!--------------------------------------------------------------------------------------------------------------------------------------
+  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+!--------------------------------------------------------------------------------------------------------------------------------------
+0                         ! Waltke stagewise growing compressor mode (1=on)
+!--------------------------------------------------------------------------------------------------------------------------------------
+0                         ! Profil losses 
+                          ! (0=New Off Dsg. Corr./1=mixed/2=Naca stall/3=SM5)
+4         ! xFac          ! max off design profil loss (xFac*omega_min)
+!--------------------------------------------------------------------------------------------------------------------------------------
+0                         ! Sherlock Holmes algorithm (1=on)
+1000      ! dmdn          ! init. gradient of massflow over rotational speed
+0.06      ! dpidm         ! op-line gradient
+1         ! nspeedl       ! Number of Speedlines
+1.0                       ! rotational speed of speedline i
+!--------------------------------------------------------------------------------------------------------------------------------------
+0                         ! Dr. Watson algorithm (1=on)
+40        ! nsl_points    ! number of points per speedline 
+!--------------------------------------------------------------------------------------------------------------------------------------
+0                         ! Search specific point (1=on) 
+1.01      ! npfgoal       ! n/n0
+3.17755   ! pipfgoal      ! PRC
+593       ! mgoal         ! searched by IGV rotation (-1 if IGV angle is given)
+-99       ! IGVgoal       ! IGV angle (only active if mgoal=-1, -99=off)
+!--------------------------------------------------------------------------------------------------------------------------------------
+! MASSFLOW / SPEED
+!
+! FLOW(NPOINT)  SPDFAC(NPOINT)
+!    [KG/S]          [-]
+!--------------------------------------------------------------------------------------------------------------------------------------
+   {MASSFLOW}     {SPEEDFRAC}
+!--------------------------------------------------------------------------------------------------------------------------------------
+! STATION INFORMATION 
+!
+! N | I | N | N | N | N | N | N | I | I |  W  |  S  | SPEED | XNULL | X(HUB) | X(CAS.) |   BLEED     | PLANE 
+! W | A | Z | L | T | M | W | L | F | F |  D  |  H  | [RPM] |  [M]  |  [M]   |  [M]    |    [%]      |   
+! O | R | S | O | E | A | R | R | O | T |  F  |  A  |       |       |        |         |             |  
+! R | C | C | S | R | C | E | E | R | R |  A  |  P  |       |       |        |         |             |  
+! K |   | H | S | P | H | F | F | M | A |  C  |  E  |       |       |        |         |             |  
+!   |   |   |   |   |   |   |   |   | N |     |  K  |       |       |        |         | HUB  CASING |  
+!--------------------------------------------------------------------------------------------------------------------------------------
+{STATION_INFO}
+!--------------------------------------------------------------------------------------------------------------------------------------
+! ANNULUS GEOMETRY SPECIFICATION (HUB)
+!
+!    X(HUB)      R(HUB)   
+!    [M]         [M]      
+!--------------------------------------------------------------------------------------------------------------------------------------
+{ANNULUS_HUB}
+!--------------------------------------------------------------------------------------------------------------------------------------
+! ANNULUS GEOMETRY SPECIFICATION (CASING)
+!
+!    X(CASING)      R(CASING)   
+!    [M]         [M]      
+!--------------------------------------------------------------------------------------------------------------------------------------
+{ANNULUS_CASE}
+!--------------------------------------------------------------------------------------------------------------------------------------
+! INLET BOUNDARY CONDITIONS
+!--------------------------------------------------------------------------------------------------------------------------------------
+  INLET_01                              
+!
+!    RADIUS      TTOT        PTOT        FLOW ANGLE
+!    [M]        [DEG C/K]    [BAR/PA]    [DEG]
+{INLET_BC_PROFILE}
+{AIRFOIL_CONFIG}
+

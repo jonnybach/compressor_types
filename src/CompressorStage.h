@@ -12,6 +12,9 @@
 #include <vector>
 #include "CompressorStagePerformance.h"
 
+class CompressorAirfoilConfiguration;
+class CompressorAnnulus;
+
 class CompressorStage {
 public:
 	//methods
@@ -24,13 +27,26 @@ public:
 	//accessors/properties
 	std::vector <CompressorStagePerformance> getOpPntPerf();
 
+	CompressorAirfoilConfiguration *getRotor();
+	void setRotor(CompressorAirfoilConfiguration *newRotor);
+
+	CompressorAirfoilConfiguration *getStator();
+	void setStator(CompressorAirfoilConfiguration *newStator);
+
+	std::string getStageName();
+
+	double calcXnullRotor(CompressorAnnulus *annulus);
+	double calcXnullStator(CompressorAnnulus *annulus);
+
 private:
 	//members
 	std::string _stgName;
 	std::vector <CompressorStagePerformance> _optPntPerf;
 
-	//stage geometry
-	//stage input data
+	CompressorAirfoilConfiguration *_rotorConfig;
+	CompressorAirfoilConfiguration *_statorConfig;
+
+	double _stgPratio;  //on same line as rotor geometry config
 
 };
 
