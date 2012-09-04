@@ -2,3 +2,6 @@
 #add Debug and Release folders
 /Debug
 /Release
+
+#other files to ignore
+radial_ratios.inp
