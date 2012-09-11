@@ -26,8 +26,8 @@ public:
 	void addStage(CompressorStage stageToAdd);
 	void setStages(std::vector<CompressorStage*> stages);
 
-	double calcMassFlow(double pressureRatio);
-	double calcEtaAdi(double pressureRatio);
+	//double calcMassFlow(double pressureRatio);
+	//double calcEtaAdi(double pressureRatio);
 	void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
 

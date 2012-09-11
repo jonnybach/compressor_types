@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 	string infileName;
 	string outfileName;
 
-	string starmepTempFile;
+	//string starmepTempFile;
 
 	bool runComp1d = false;
 	bool writeSmpFile = false;
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     //inhibit the error message from getopt by setting opterr to zero
     opterr = 0;
 
-    while ((c = getopt(argc, argv, "e:p:s:" )) != -1) {
+    while ((c = getopt(argc, argv, "e:p:s" )) != -1) {
     	switch (c) {
     	case 'e':
     		//execute comp1d with specified input file
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 
     	case 's':
     		//convert output to STARMEP input file
-    		starmepTempFile = optarg;
+    		//starmepTempFile = optarg;
     		writeSmpFile = true;
     		break;
 
@@ -171,21 +171,24 @@ int main(int argc, char *argv[]) {
 		readComp1dOutfile(outfileName, speedLines, compressor);
 	}
 
-	//add additional annulus points for the inlet, igv, and diffuser
-	addAnnulusPoints( compressor );
-
-	//create the stage to represent the igv
-	createIgvStage( compressor );
-
-	//set annulus points to stage
-	setStageSailPoints( compressor );
-
 	if (writeSmpFile) {
+
+		//add additional annulus points for the inlet, igv, and diffuser
+		addAnnulusPoints( compressor );
+
+		//create the stage to represent the igv
+		createIgvStage( compressor );
+
+		//set annulus points to stage
+		setStageSailPoints( compressor );
+
+		string starmepTempFile("starmep7_input_template.dat");
 		string starmepTempEnterFile = starmepTempFile;
 		string oldSub("input");
 		string newSub("enter");
 		replaceSubstring(starmepTempEnterFile, oldSub, newSub);
 		writeStarmepFile(outfileName, starmepTempFile, starmepTempEnterFile, compressor);
+
 	}
 
 	if ( interpAtPratio ) {
@@ -224,14 +227,16 @@ void readComp1dOutfile(string outfileName, vector<CompressorSpeedLine *> &speedL
 	const string preLossFactorHdr("BLOCKAGE FACTOR FOR ALL ROWS");
 	const string diffHdr("DIFFUSER CALIBRATION FACTOR");
 	const string desPntHdr("AT DESIGN POINT");
-	const string speedLineHdr("OVERALL RESULTS FOR SPEEDLINE");
 
+	const string stageSmryHdrStg("STAGE");
+	const string stageSmryHdrOgv("OGV");
+	const string stageSmryHdrSmry("SUMMARY");
+
+	const string speedLineHdr("OVERALL RESULTS FOR SPEEDLINE");
 	//Comp1d (v1.2) - static const string speedLinePntsHdr("POINT    TIN    PIN     WCORR     PR     DT/T   ETAADI  ETAPOLY  WCORROUT");
 	const string speedLinePntsHdr("POINT     FLOW     WCORR     WCORR    DT/T     PR     ETAADI  ETAPOLY     PR     ETAADI  ETAPOLY");
 
-	const string stageSmryHdrStg("STAGE");
-	const string stageSmryHdrSmry("SUMMARY");
-	const string stageSmryHdrOgv("OGV");
+
 
 	vector<string> lineParts;
 
@@ -256,6 +261,11 @@ void readComp1dOutfile(string outfileName, vector<CompressorSpeedLine *> &speedL
 
 	//open a file input stream
 	ifstream myfile (outfileName.data(), ifstream::in);
+
+	if ( !myfile.good() ) {
+		printf( "\n -- ERROR -- Trouble opening the comp1d output file \" %s \".  Please check that this file exists.\n\n", outfileName.c_str() );
+		throw exception();
+	}
 
 	if (myfile.is_open())
 	{
@@ -370,6 +380,8 @@ void readComp1dOutfile(string outfileName, vector<CompressorSpeedLine *> &speedL
 				crntSpeedLine = new CompressorSpeedLine;
 				crntSpeed = atof(lineParts[6].c_str());
 				crntTamb = atof(lineParts[8].c_str());
+				crntPamb = compressor->getDesignPnt()->getPamb();
+				crntPhi = compressor->getDesignPnt()->getPhi();
 				crntSpeedLine->setShaftSpeed(crntSpeed);
 				crntSpeedLine->setStages(stages);
 
@@ -397,8 +409,8 @@ void readComp1dOutfile(string outfileName, vector<CompressorSpeedLine *> &speedL
 						tmpOpPnt->setOperatingPoint( atoi(lineParts[0].c_str())
 								, crntTamb
 								, crntPamb
-								, crntPhi
 								, atof(lineParts[8].c_str())
+								, crntPhi
 								, atof(lineParts[4].c_str())
 								, atof(lineParts[9].c_str())
 								, atof(lineParts[10].c_str())
@@ -1301,6 +1313,10 @@ void getStagePerformance(ifstream &fileToParse, CompressorStage *stage) {
 	double tmpPt0[100], tmpPt1[100], tmpPt2[100], tmpPt3[100], tmpPt4[100];
 	double tmpTt0[100];
 	double tmpAlp1[100], tmpAlp2[100], tmpAlp3[100], tmpAlp4[100];
+	double tmpDefR[100], tmpDefS[100];
+	double tmpMnR[100], tmpMnS[100];
+	double tmpIncR[100], tmpIncS[100];
+	double tmpDevR[100], tmpDevS[100];
 
 	bool foundStageEnd = false;
 	bool foundBlankLine = false;
@@ -1334,6 +1350,12 @@ void getStagePerformance(ifstream &fileToParse, CompressorStage *stage) {
 					tmpAlp2[lineIndx] = atof(lineParts[2].c_str());
 					tmpAlp3[lineIndx] = atof(lineParts[3].c_str());
 					tmpAlp4[lineIndx] = atof(lineParts[4].c_str());
+					tmpDefR[lineIndx] = atof(lineParts[5].c_str());
+					tmpDefS[lineIndx] = atof(lineParts[6].c_str());
+					tmpMnR[lineIndx] = atof(lineParts[9].c_str());
+					tmpMnS[lineIndx] = atof(lineParts[10].c_str());
+					tmpIncR[lineIndx] = atof(lineParts[13].c_str());
+					tmpIncS[lineIndx] = atof(lineParts[14].c_str());
 
 					maxOpPtNmbr = tmpOpPnt[lineIndx];
 
@@ -1367,6 +1389,9 @@ void getStagePerformance(ifstream &fileToParse, CompressorStage *stage) {
 
 					//store total pressure values for this stage
 					tmpTt0[lineIndx] = atof(lineParts[11].c_str());
+
+					tmpDevR[lineIndx] = atof(lineParts[12].c_str());
+					tmpDevS[lineIndx] = atof(lineParts[13].c_str());
 
 					lineIndx++;
 
@@ -1472,8 +1497,8 @@ void addAnnulusPoints( Compressor *compressor ) {
 	double rExitCase = sqrt( diffExitArea / M_PI + pow(rExitHub, 2) );
 
 	//calculate x location from assumed diffusion angle for casing
-	double diffCaseAng = 7.5 * M_PI / 180.0;
-	double diffLength = ( rExitCase - diffInHub->getRadius() ) / tan( diffCaseAng ) ;
+	double diffCaseAng = 10 * M_PI / 180.0;  //assume casing angle is 10 degrees
+	double diffLength = ( rExitCase - diffInHub->getRadius() ) / tan( diffCaseAng );
 	double xDiffExit = diffInHub->getX() + diffLength;
 
 	//create trailing edge diffuser points
@@ -1798,10 +1823,11 @@ void writeStarmepFile(string comp1dOutfile, string starmepTempFileName, string s
 	// {DEL_IGV}
 	tempStrm << compressor->getIgv()->getPosition();
 	string igvPos = tempStrm.str();
+	string igvAdjAng = "0.0";  //STARMEP isn't asking for the IGV position, but rather the adjustment from the airfoil definition, which for design points, should be zero.
 	tempStrm.str(std::string()); //clear the stream
 	keyword.assign("{DEL_IGV}");
-	replaceSubstring( smpText, keyword, igvPos );
-	replaceSubstring( smpEntrText, keyword, igvPos );
+	replaceSubstring( smpText, keyword, igvAdjAng );
+	replaceSubstring( smpEntrText, keyword, igvAdjAng );
 
 
 	// {K_VGV0}
@@ -2194,7 +2220,7 @@ string createStarmepStationInfo(Compressor *compressor) {
 			sprintf( aflType, fmtIarc, rotor->getAirfoilType() );
 			sprintf( numAirfoils, fmtNzsch, rotor->getNumBlades());
 			sprintf( xNull, fmtXnull, stage->calcXnullRotor( compressor->getAnnulus() )/1000.0 );
-			sprintf( bldCase, fmtBldCase, rotor->getBleedFrac() );
+			sprintf( bldCase, fmtBldCase, rotor->getBleedFrac()/100.0 );
 			sprintf( stnName, "%s", stage->getStageName().c_str() );
 
 			//write leading edge station info
@@ -2232,7 +2258,7 @@ string createStarmepStationInfo(Compressor *compressor) {
 		sprintf( aflType, fmtIarc, stator->getAirfoilType() );
 		sprintf( numAirfoils, fmtNzsch, stator->getNumBlades());
 		sprintf( xNull, fmtXnull, stage->calcXnullStator( compressor->getAnnulus() )/1000.0 );
-		sprintf( bldCase, fmtBldCase, stator->getBleedFrac() );
+		sprintf( bldCase, fmtBldCase, stator->getBleedFrac()/100.0 );
 
 		if ( stgNum != 0 && stgNum != ( compressor->getStages().size() - 1 ) ) {
 			sprintf( stnName, "S%s", stage->getStageName().c_str() );
@@ -2292,8 +2318,8 @@ string createStarmepStationInfo(Compressor *compressor) {
 			sprintf( aflType, "    ", -1 );
 			sprintf( numAirfoils, "    ", -1);
 			sprintf( nLoss, "    ", 0);
-			sprintf( nTerp, fmtNterp, 0);
-			sprintf( nMach, fmtNmach, 0);
+			sprintf( nTerp, "    ", 0);
+			sprintf( nMach, "    ", 0);
 			sprintf( nWref, "    ", 0);
 			sprintf( nLref, "    ", 1);
 			sprintf( iForm, "    ", 1);
@@ -2504,19 +2530,23 @@ void showHelp() {
 	printf("\nComp1D Tools (v%s) - ERROR in argument syntax\n\n"
 			"Program must be called as follows:\n"
 			"\n"
-			"comp1dtools [Options] \RESULTS FILE>\n"
+			"comp1dtools [Options] <RESULTS FILE>\n"
 			"\n"
 			"Required)\n"
 			"\t<RESULTS FILE>      : name of the Comp1D results file to be parsed.\n"
 			"\n"
 			"Options)\n"
-			"\t-e <INPUT FILE>     : runs Comp1d analysis mode using the specified input file <INPUT FILE> \n"
-			"\t                      and writes results to <RESULTS FILE>.  After running Comp1D \n"
+			"\t-e <INPUT FILE>     : runs Comp1d analysis mode using the specified input file <INPUT FILE>\n"
+			"\t                      and writes results to <RESULTS FILE>.  After running Comp1D\n"
 			"\t                      parses the results file for further operations.\n"
 			"\n"
-			"\t-p <PRESSURE RATIO> : allows Comp1d tools to interpolate the compressor performance\n"
+			"\t-p <PRESSURE RATIO> : allows Comp1d tools to interpolate and output the compressor performance\n"
 			"\t                      associated with the specified pressure ratio <PRESSURE RATIO>.\n"
 			"\t                      Will only run correctly when a series of points are run along a speedline.\n"
+			"\n"
+			"\t-s                  : generates a STARMEP v7 input file from the Comp1D ouput.\n"
+			"\t                      Requires that a template input and template enter file be located in\n"
+			"\t                      the same directory as the Comp1D output file.\n"
 			"\n"
 			, version.c_str());
 }

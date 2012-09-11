@@ -6,15 +6,21 @@
  */
 
 #include <fstream>
+
+//UNCOMMENT TO USE GNU SCIENTIFIC LIBRARY SPLINE INTERPOLATION METHODS
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_sys.h>
 #include <gsl/gsl_spline.h>
+
+//UNCOMMENT TO USE WILD MAGIC GEOMETRY LIBRARY INTERPOLATION METHODS
+//#include "Wm5IntpAkimaNonuniform1.h"
+
 #include "CompressorSpeedLine.h"
 #include "CompressorOperatingPoint.h"
 #include "CompressorStage.h"
 
 extern "C" {
-#include "Interpolation.h"
+	#include "Interpolation.h"
 }
 
 CompressorSpeedLine::CompressorSpeedLine() {
@@ -33,6 +39,7 @@ void CompressorSpeedLine::addStage(CompressorStage stageToAdd) { _stages.push_ba
 
 void CompressorSpeedLine::setStages(std::vector<CompressorStage *> stages) { _stages = stages; }
 
+/*
 double CompressorSpeedLine::calcMassFlow(double pressureRatio) {
 	//interpolates the mass flow for a given
 
@@ -72,6 +79,7 @@ double CompressorSpeedLine::calcEtaAdi(double pressureRatio) {
 	return etaAdiInterp;
 
 }
+*/
 
 void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab) {
 	//interpolates the mass flow for a given
@@ -101,15 +109,24 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, doub
 	double etaAdiInterp;
 
 	//check if pressureRatio is outside min and max bounds of pRatio array
-	// if so using simple extrapolation at end points, else use gsl spline functions
-	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin) ) {
+	// if so use linear interpolation, else use higher order interpolation
+	bool onlyLinrIntrp = true;
+	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin) || onlyLinrIntrp ) {
 		//pressureRatio is below min pRatio from array, use linear extrapolation
 
 		wInterp = LinearInterpUnsorted(numElems, pRatio, wInlet, pressureRatio, 1);
 		etaAdiInterp = LinearInterpUnsorted(numElems, pRatio, etaAdi, pressureRatio, 1);
 
 	} else {
-		//pressureRatio is bounded by arrays, use gsl interpolation
+		//pressureRatio is bounded by arrays, use gsl cubic spline interpolation or akima spline
+
+		/*
+		Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
+		Wm5::IntpAkimaNonuniform1<double> etaAkimIntrp( numElems, pRatio, etaAdi);
+
+		wInterp = wAkimIntrp(pressureRatio);
+		etaAdiInterp = etaAkimIntrp(pressureRatio);
+		*/
 
 		//initialize a spline accelerator type
 		gsl_interp_accel *acc = gsl_interp_accel_alloc();
@@ -148,7 +165,7 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, doub
 CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int stageNmbr, double pressureRatio) {
 
 	//create arrays of pressure ratio and mass flow
-	CompressorStage crntStage = *(_stages[stageNmbr-1]);
+	CompressorStage crntStage = *( _stages[stageNmbr-1] );
 	int numElems = crntStage.getOpPntPerf().size();
 	double pRatio[numElems];
 	double tmpPt0[numElems];
@@ -199,6 +216,13 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	} else {
 		//pressureRatio is bounded by arrays, use gsl interpolation
 
+		//Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
+		//Wm5::IntpAkimaNonuniform1<double> etaAkimIntrp( numElems, pRatio, etaAdi);
+
+		//wInterp = wAkimIntrp(pressureRatio);
+		//etaAdiInterp = etaAkimIntrp(pressureRatio);
+
+		/*
 		//allocate spline and spline accelorator
 		gsl_spline *spline = gsl_spline_alloc(gsl_interp_cspline, numElems);
 		gsl_interp_accel *acc = gsl_interp_accel_alloc();
@@ -245,6 +269,7 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 		//free the memory allocated for the spline and accelorator types
 		gsl_spline_free(spline);
 		gsl_interp_accel_free(acc);
+		*/
 
 	}
 
