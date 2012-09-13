@@ -94,9 +94,9 @@ void Compressor::setLossCorrData(LossCorrelationData *newLossData) {
 	_lossCorrData = newLossData;
 }
 
-ClearanceSpecification Compressor::getClearanceSpec() {	return _clearncSpec; }
-void Compressor::setClearnaceSpec(ClearanceSpecification clearncSpec) {
-	if (clearncSpec < CLEARANCE_NONE || clearncSpec > CLEARANCE_ABSOLUTE ) throw std::exception();
+TipClearanceSpecification Compressor::getClearanceSpec() {	return _clearncSpec; }
+void Compressor::setClearnaceSpec(TipClearanceSpecification clearncSpec) {
+	if (clearncSpec < TIP_CLEARANCE_NONE || clearncSpec > TIP_CLEARANCE_ABSOLUTE ) throw std::exception();
 	_clearncSpec = clearncSpec;
 }
 
@@ -150,7 +150,7 @@ CompressorStage *Compressor::findOrCreateStageWithName(std::string stageName) {
 	CompressorStage *stageRef = 0;
 
 	std::vector<CompressorStage *>::iterator it;
-	for ( it=_stages.begin() ; it < _stages.end(); it++) {
+	for ( it=_stages.begin() ; it != _stages.end(); it++) {
 		stageRef = *it;
 		if ( stageRef->getStageName().find(stageName, 0 ) != std::string::npos ) {
 			foundStage = true;
@@ -184,4 +184,48 @@ void Compressor::setVgvRuleAtStage(int stageNumber, double ruleFactor) {
 double Compressor::getVgvRuleAtStage(int stageNumber) {
 	double vgvRule = _vaneSchedule.at(stageNumber);
 	return vgvRule;
+}
+
+void Compressor::addTwoDAirfoilConfig(CompressorTwoDAirfoilConfiguration newConfig ) { _airflTwoDConfigs.push_back(newConfig); }
+
+std::vector<CompressorTwoDAirfoilConfiguration> Compressor::getAirfoilTwoDConfigs() { return _airflTwoDConfigs; }
+
+CompressorTwoDAirfoilConfiguration *Compressor::getAirfoilTwoDConfigAtIndex(int index) {
+	return &_airflTwoDConfigs.at(index);
+}
+
+CompressorTwoDAirfoilConfiguration *Compressor::getAirfoilTwoDConfigWithName(std::string name)
+{
+
+	/*
+	CompressorTwoDAirfoilConfiguration *ptr_af = 0;
+	std::vector<CompressorTwoDAirfoilConfiguration>::const_iterator it;
+	for ( it=_airflTwoDConfigs.begin() ; it != _airflTwoDConfigs.end(); it++) {
+		//af = *it;
+		if ( (*it).getName().find(name, 0 ) != std::string::npos ) {
+			//ptr_af = &af;
+			//foundConfig = true;
+			break;  //end looping
+		} else {
+			ptr_af = 0;
+		}
+	} COMMENTED THIS OUT DUE TO WIERD BUGS OCCURING WHEN RETURNING REFERNCES USING THIS */
+
+	bool foundConfig = false;
+	size_t iCnfg;
+	size_t numConfigs = _airflTwoDConfigs.size();
+	for ( iCnfg = 0; iCnfg < numConfigs; ++iCnfg ) {
+		if ( _airflTwoDConfigs.at(iCnfg).getName().find(name, 0 ) != std::string::npos ) {
+			foundConfig = true;
+			break;  //end looping
+		}
+	}
+
+	CompressorTwoDAirfoilConfiguration *ptr_af = 0;
+	if ( foundConfig ) {
+		ptr_af = &_airflTwoDConfigs.at(iCnfg);
+	}
+
+	return ptr_af;
+
 }

@@ -8,13 +8,7 @@
 #ifndef COMPRESSORAIRFOILCONFIGURATION_H_
 #define COMPRESSORAIRFOILCONFIGURATION_H_
 
-
-enum AirfoilType {
-	AIRFOIL_TYPE_NONE = 0,
-	AIRFOIL_TYPE_NACA_DCA = 1,
-	AIRFOIL_TYPE_CDA = 2,
-	AIRFOIL_TYPE_HPA = 3
-};
+#include "CompressorEnumerations.h"
 
 class AnnulusPoint;
 
@@ -39,8 +33,8 @@ public:
 		double machIn,
 		double delDevn,
 		double delLoss,
-		double dsnStagePratio,
-		double dsnAlphaExit,
+		//double dsnStagePratio,
+		//double dsnAlphaExit,
 		double bleedFrac
 		);
 
@@ -72,8 +66,8 @@ public:
 	double getDelDevn();
 	double getDelLoss();
 
-	double getDsnStagePratio();
-	double getDsnAlphaExit();
+	//double getDsnStagePratio();
+	//double getDsnAlphaExit();
 
 	double getBleedFrac();
 	void setBleedFrac(double bleedFraction);
@@ -116,8 +110,8 @@ private:
 	double _delDevn;	  //Comp1D specific deviation correction adder
 	double _delLoss;	  //Comp1D specific loss correction adder
 
-	double _stagePratio;  //pressure ratio across stage (design parameter for blades)
-	double _alphaExit;	  //absolute exit flow angle (design parameter for vanes)
+	//double _stagePratio;  //pressure ratio across stage (design parameter for blades)
+	//double _alphaExit;	  //absolute exit flow angle (design parameter for vanes)
 
 	double _bleedFrac;	  //fraction amount of inlet mass flow extracted just upstream of airfoil row
 

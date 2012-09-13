@@ -10,12 +10,8 @@
 
 #include "CompressorStage.h"
 #include "CompressorOperatingPoint.h"
-
-enum ClearanceSpecification {
-	CLEARANCE_NONE = 0,
-	CLEARANCE_RATIO = 1,    // ratio of clearance to height
-	CLEARANCE_ABSOLUTE = 2  // absolute values specified in millimeters
-};
+#include "CompressorEnumerations.h"
+#include "CompressorTwoDAirfoilConfiguration.h"
 
 class CompressorAnnulus;
 class Inlet;
@@ -46,8 +42,8 @@ public:
 	LossCorrelationData *getLossCorrData();
 	void setLossCorrData(LossCorrelationData *newLossCorrData);
 
-	ClearanceSpecification getClearanceSpec();
-	void setClearnaceSpec(ClearanceSpecification clearncSpec);
+	TipClearanceSpecification getClearanceSpec();
+	void setClearnaceSpec(TipClearanceSpecification clearncSpec);
 
 	void insertStageAtIndex(int stageIndex, CompressorStage *newStage );
 	std::vector<CompressorStage *> getStages();
@@ -57,6 +53,12 @@ public:
 
 	void setVgvRuleAtStage(int stageNumber, double ruleFactor);
 	double getVgvRuleAtStage(int stageNumber);
+
+	void addTwoDAirfoilConfig(CompressorTwoDAirfoilConfiguration newConfig );
+	CompressorTwoDAirfoilConfiguration *getAirfoilTwoDConfigAtIndex(int index);
+	CompressorTwoDAirfoilConfiguration *getAirfoilTwoDConfigWithName(std::string name);
+	std::vector<CompressorTwoDAirfoilConfiguration> getAirfoilTwoDConfigs();
+
 
 private:
 	CompressorAnnulus *_annulus;
@@ -71,7 +73,9 @@ private:
 	std::vector<CompressorOperatingPoint *> _opPnts;
 	std::vector<double> _vaneSchedule;
 
-	ClearanceSpecification _clearncSpec;
+	TipClearanceSpecification _clearncSpec;
+
+	std::vector<CompressorTwoDAirfoilConfiguration> _airflTwoDConfigs;
 
 };
 

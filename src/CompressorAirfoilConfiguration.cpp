@@ -13,11 +13,18 @@ CompressorAirfoilConfiguration::CompressorAirfoilConfiguration() {
 	// TODO Auto-generated constructor stub
 }
 
+/*
 CompressorAirfoilConfiguration::CompressorAirfoilConfiguration(
 	AirfoilType airfoilType, int numBlades, double sqc, double tqc, double aqc, double oqs, double shapeK
 	, double stagrAng, double betaMtlIn, double betaMtlOut, double tipClrToHgt
 	, double delBetaM, double avdr, double machIn, double delDevn, double delLoss
 	, double dsnStagePratio, double dsnAlphaExit, double bleedFrac ) {
+*/
+CompressorAirfoilConfiguration::CompressorAirfoilConfiguration(
+		AirfoilType airfoilType, int numBlades, double sqc, double tqc, double aqc, double oqs, double shapeK
+		, double stagrAng, double betaMtlIn, double betaMtlOut, double tipClrToHgt
+		, double delBetaM, double avdr, double machIn, double delDevn, double delLoss
+		, double bleedFrac ) {
 
 	_airfoilType = airfoilType;
 	_numBlades = numBlades;
@@ -35,8 +42,6 @@ CompressorAirfoilConfiguration::CompressorAirfoilConfiguration(
 	_machIn = machIn;
 	_delDevn = delDevn;
 	_delLoss = delLoss;
-	_stagePratio = dsnStagePratio;
-	_alphaExit = dsnAlphaExit;
 	_bleedFrac = bleedFrac;
 }
 
@@ -76,8 +81,8 @@ double CompressorAirfoilConfiguration::getMachIn() { return _machIn; }
 double CompressorAirfoilConfiguration::getDelDevn() { return _delDevn; }
 double CompressorAirfoilConfiguration::getDelLoss() { return _delLoss; }
 
-double CompressorAirfoilConfiguration::getDsnStagePratio() { return _stagePratio; }
-double CompressorAirfoilConfiguration::getDsnAlphaExit() { return _alphaExit; }
+//double CompressorAirfoilConfiguration::getDsnStagePratio() { return _stagePratio; }
+//double CompressorAirfoilConfiguration::getDsnAlphaExit() { return _alphaExit; }
 
 double CompressorAirfoilConfiguration::getBleedFrac() { return _bleedFrac; }
 void CompressorAirfoilConfiguration::setBleedFrac(double bleedFraction) {
