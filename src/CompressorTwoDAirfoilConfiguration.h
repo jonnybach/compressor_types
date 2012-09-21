@@ -21,21 +21,32 @@ public:
 	virtual ~CompressorTwoDAirfoilConfiguration();
 
 	void addSectionConfiguration(AirfoilSectionConfiguration newSectConfig);
+	std::vector<AirfoilSectionConfiguration> getSections();
 	AirfoilSectionConfiguration getSectionConfigAtIndex(int index);
-	const std::vector<AnnulusPoint> getLeSectPoints();
-	const std::vector<AnnulusPoint> getTeSectPoints();
-	const AnnulusPoint getLeSectPointAtIndex(int index);
-	const AnnulusPoint getTeSectPointAtIndex(int index);
+	const AirfoilSectionConfiguration *getSectionNearSpanFraction(double frac);
+	const AirfoilSectionConfiguration *getSectionAtMidspan();
+	const AirfoilSectionConfiguration *getSectionAtHub();
+	const AirfoilSectionConfiguration *getSectionAtTip();
+
+	std::vector<AnnulusPoint> getLeSectPoints();
+	std::vector<AnnulusPoint> getTeSectPoints();
+	AnnulusPoint getSectLePointAtIndex(int index);
+	AnnulusPoint getSectTePointAtIndex(int index);
 	size_t maxSectNo();
 
-	//methods for sail point collections, who's number of entries may not coincide with
-	// the number of section configurations, ugh!
-	void setLeSailPoints( const std::vector<AnnulusPoint> newLePoints );
-	void setTeSailPoints( const std::vector<AnnulusPoint> newLePoints );
-	const std::vector<AnnulusPoint> getLeSailPoints();
-	const std::vector<AnnulusPoint> getTeSailPoints();
-	const AnnulusPoint getLeSailPointAtIndex(int index);
-	const AnnulusPoint getTeSailPointAtIndex(int index);
+	//methods for sail point collections,
+	// note that the number of values of sail points
+	// coincide with those from the STARMEP out file.
+	// but the radial values are not the same as that from the OUT file
+	void setLeSailPoints( std::vector<AnnulusPoint> newLePoints );
+	void setTeSailPoints( std::vector<AnnulusPoint> newLePoints );
+	std::vector<AnnulusPoint> getLeSailPoints();
+	std::vector<AnnulusPoint> getTeSailPoints();
+	AnnulusPoint getLeSailPointAtIndex(int index);
+	AnnulusPoint getTeSailPointAtIndex(int index);
+
+	AirfoilBehavior getAirfoilBehavior();
+	void setAirfoiilBehavior(AirfoilBehavior newBehavior);
 
 	AirfoilType getAirfoilType();
 	void setAirfoilType(AirfoilType newAirfoilType);
@@ -44,11 +55,16 @@ public:
 	void setNumAirfoils(int numAirfoils);
 
 	std::string getName();
+	void setName(std::string newName);
 
 	double getXnull();
 	void setXnull(double newXnull);
 
+	double getSpan();
+
 private:
+
+	//void updateSectionLeAndTePnts();
 
 	std::string _name;
 
@@ -57,12 +73,12 @@ private:
 
 	std::vector<AirfoilSectionConfiguration> _sectConfigs;
 
-	AirfoilType _airfoilType;
 	AirfoilBehavior _airfoilBhvr;
+	AirfoilType _airfoilType;
 	int _numBlades;
 
-	TipClearanceSpecification _tipClrSpec;
-	double _tipClearance;
+	//TipClearanceSpecification _tipClrSpec;
+	//double _tipClearance;
 
 	double _xNull;
 

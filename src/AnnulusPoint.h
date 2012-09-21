@@ -19,9 +19,9 @@ public:
 	virtual ~AnnulusPoint();
 
 	//accessors (properties)
-	double getX();
-	double getRadius();
-	std::string getLabel();
+	double getX() const;
+	double getRadius() const;
+	std::string getLabel() const;
 	void setLabel(std::string newLabel);
 
 	double axialAreaTo(AnnulusPoint *otherPoint);

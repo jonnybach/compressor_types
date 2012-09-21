@@ -9,8 +9,7 @@
 #define AIRFOILSECTIONCONFIGURATION_H_
 
 #include "CompressorEnumerations.h"
-
-class AnnulusPoint;
+#include "AnnulusPoint.h"
 
 class AirfoilSectionConfiguration {
 public:
@@ -25,7 +24,23 @@ public:
 		double betaMtlIn,
 		double betaMtlOut,
 		double beta1,
-		double delBetaM,
+		double delBeta,
+		double avdr,
+		double machIn,
+		double delDevn,
+		double delLoss
+	);
+
+	AirfoilSectionConfiguration(AnnulusPoint lePoint, AnnulusPoint tePoint,
+		double pqc,
+		double tqc,
+		double aqc,
+		double chord,
+		double stagrAng,
+		double betaMtlIn,
+		double betaMtlOut,
+		double beta1,
+		double delBeta,
 		double avdr,
 		double machIn,
 		double delDevn,
@@ -34,40 +49,43 @@ public:
 
 	virtual ~AirfoilSectionConfiguration();
 
-	AnnulusPoint *getLePoint();
-	void setLePoint(AnnulusPoint *newLePnt);
+	AnnulusPoint getLePoint() const;
+	void setLePoint(AnnulusPoint newLePnt);
 
-	AnnulusPoint *getTePoint();
-	void setTePoint(AnnulusPoint *newTePnt);
+	AnnulusPoint getTePoint() const;
+	void setTePoint(AnnulusPoint newTePnt);
 
-	void setHpaConfig(double beta1metal, double delBetaM, double tqc, double avdr, double machIn);
+	void setHpaConfig(double beta1, double delBeta, double tqc, double avdr, double machIn);
 
-	double getRadius();
+	double getRadiusMean() const;
+	//double getRadius() const;
 
-	double getPqC();
-	double getTqC();
-	double getAqC();
+	double getPqC() const;
+	double getTqC() const;
+	double getAqC() const;
 
-	double getThickness();
-	double getChord();
+	double getThickness() const;
+	double getChord() const;
+	double getAxialChord() const;
 
-	double getStagrAng();
-	double getBetaMtlIn();
-	double getBetaMtlOut();
+	double getStagrAng() const;
+	double getBetaMtlIn() const;
+	double getBetaMtlOut() const;
 
-	double getDelBetaM();
-	double getAvdr();
-	double getMachIn();
+	double getBeta1() const;
+	double getDelBeta() const;
+	double getAvdr() const;
+	double getMachIn() const;
 
-	double getDelDevn();
-	double getDelLoss();
+	double getDelDevn() const;
+	double getDelLoss() const;
 
 private:
 
-	AnnulusPoint *_lePnt;
-	AnnulusPoint *_tePnt;
+	AnnulusPoint _lePnt;
+	AnnulusPoint _tePnt;
 
-	double _radius;    //radial location of airfoil section
+	//double _radius;    //radial location of airfoil section
 
 	double _pqc;		//pitch to chord
 	double _tqc;		//thickness to chord
@@ -75,13 +93,13 @@ private:
 
 	double _chord;		//absolute chord
 
-	double _stagrAng;   //stagger angle (deg)
-	double _betaMin;	//in metal angle (deg)
-	double _betaMout;	//out metal angle (deg)
+	double _stagrAng;   //stagger angle (deg)  - NOTE: output for HPA airfoils
+	double _betaMin;	//in metal angle (deg)  - NOTE: output for HPA airfoils
+	double _betaMout;	//out metal angle (deg) - NOTE: output for HPA airfoils
 
 	//HPA specific parameters
 	double _beta1;		  //relative inlet flow angle (deg)
-	double _delBetaM;	  //change in metal angle in to out
+	double _delBeta;	  //change in flow angle in to out
 	double _avdr;		  //axial velocity density ratio
 	double _machIn;		  //approach mach number
 

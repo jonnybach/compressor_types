@@ -46,10 +46,10 @@ static AnnulusPoint *interpolatePointAtFrac( double distFraction, AnnulusPoint *
 }
 */
 
-double AnnulusPoint::getX() { return _X; }
-double AnnulusPoint::getRadius() { return _Y; }
+double AnnulusPoint::getX() const { return _X; }
+double AnnulusPoint::getRadius() const { return _Y; }
 
-std::string AnnulusPoint::getLabel() { return _label; }
+std::string AnnulusPoint::getLabel() const { return _label; }
 void AnnulusPoint::setLabel( std::string newLabel ) {
 	_label = std::string( newLabel );
 }
