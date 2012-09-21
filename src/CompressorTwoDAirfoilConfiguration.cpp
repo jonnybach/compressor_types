@@ -56,8 +56,10 @@ const AirfoilSectionConfiguration *CompressorTwoDAirfoilConfiguration::getSectio
 	//  points for each section from the sail point vectors
 	//this->updateSectionLeAndTePnts();
 
-	double rHub = (*_sectConfigs.begin()).getRadiusMean();
-	double rTip = (*_sectConfigs.end()).getRadiusMean();
+	//double rHub = _sectConfigs.at(0).getRadiusMean();
+	//double rTip = _sectConfigs.at(_sectConfigs.size()-1).getRadiusMean();
+	double rHub = (_sectConfigs.front()).getRadiusMean();
+	double rTip = (_sectConfigs.back()).getRadiusMean();  //Had to enclose call to back in parentheses.
 
 	double span = std::abs( rTip - rHub );
 	double spanFrac;
@@ -65,14 +67,20 @@ const AirfoilSectionConfiguration *CompressorTwoDAirfoilConfiguration::getSectio
 	double delta = 1e12;
 	double smallestDelta = delta;
 
+	AirfoilSectionConfiguration sect;
 	AirfoilSectionConfiguration *sectToReturn = 0;
 
 	std::vector<AirfoilSectionConfiguration>::iterator itSect;
 	for ( itSect = _sectConfigs.begin(); itSect != _sectConfigs.end(); ++itSect ) {
-		sectToReturn = &(*itSect);
-		spanFrac = std::abs( sectToReturn->getRadiusMean() - rTip) / span;
+		sect = (*itSect);
+		spanFrac = std::abs( (*itSect).getRadiusMean() - rHub) / span;
 		delta = std::abs( spanFrac - frac );
-		smallestDelta = ( delta < smallestDelta ) ? delta : smallestDelta;
+		//smallestDelta = ( delta < smallestDelta ) ? delta : smallestDelta;
+		if (delta < smallestDelta) {
+			smallestDelta = delta;
+			sectToReturn = &(*itSect);
+		}
+
 	}
 
 	return sectToReturn;
@@ -172,14 +180,13 @@ void CompressorTwoDAirfoilConfiguration::setXnull(double newXnull) { _xNull = ne
 
 double CompressorTwoDAirfoilConfiguration::getSpan()
 {
-	//WON'T NECESSARILLY BE SAME AS GETTING SPAN USING MEAN LE AND TE RADII
 	double span = -9999;
 	if  ( !_sectConfigs.empty() ) {
 		double rHub = (*_sectConfigs.begin()).getRadiusMean();
 		double rTip = (*_sectConfigs.end()).getRadiusMean();
 		span = std::abs( rTip - rHub );
 	}
-	return span;
+	return span; //meters
 }
 
 /*

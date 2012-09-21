@@ -80,7 +80,7 @@ private:
 	//TipClearanceSpecification _tipClrSpec;
 	//double _tipClearance;
 
-	double _xNull;
+	double _xNull; //meters
 
 };
 

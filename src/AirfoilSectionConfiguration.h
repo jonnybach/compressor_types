@@ -82,8 +82,8 @@ public:
 
 private:
 
-	AnnulusPoint _lePnt;
-	AnnulusPoint _tePnt;
+	AnnulusPoint _lePnt; // x, Rad (meters)
+	AnnulusPoint _tePnt; // x, Rad (meters)
 
 	//double _radius;    //radial location of airfoil section
 
@@ -91,7 +91,7 @@ private:
 	double _tqc;		//thickness to chord
 	double _aqc;		//relative CG to chord
 
-	double _chord;		//absolute chord
+	double _chord;		//absolute chord  (meters)
 
 	double _stagrAng;   //stagger angle (deg)  - NOTE: output for HPA airfoils
 	double _betaMin;	//in metal angle (deg)  - NOTE: output for HPA airfoils
@@ -99,7 +99,7 @@ private:
 
 	//HPA specific parameters
 	double _beta1;		  //relative inlet flow angle (deg)
-	double _delBeta;	  //change in flow angle in to out
+	double _delBeta;	  //change in flow angle in to out (deg)
 	double _avdr;		  //axial velocity density ratio
 	double _machIn;		  //approach mach number
 
