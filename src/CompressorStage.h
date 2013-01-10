@@ -26,6 +26,8 @@ public:
 
 	//accessors/properties
 	std::vector <CompressorStagePerformance> getOpPntPerf();
+	CompressorStagePerformance getOpPntPerfAtIndex(int index);
+	void replaceOpPntPerfAtIndex(int index, CompressorStagePerformance newPerfPnt);
 
 	CompressorAirfoilConfiguration *getRotor();
 	void setRotor(CompressorAirfoilConfiguration *newRotor);
@@ -46,7 +48,7 @@ private:
 	CompressorAirfoilConfiguration *_rotorConfig;
 	CompressorAirfoilConfiguration *_statorConfig;
 
-	double _stgPratio;  //on same line as rotor geometry config
+	double _stgPratio;
 
 };
 

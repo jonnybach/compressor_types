@@ -9,6 +9,7 @@
 #define INLETGUIDEVANE_H_
 
 #include <vector>
+#include "InletGuideVanePerformance.h"
 
 class PolynomialFit;
 class CompressorAirfoilConfiguration;
@@ -32,6 +33,9 @@ public:
 
 	CompressorAirfoilConfiguration *getAirfoilConfig();
 
+	void addPerformancePoint(int opPnt, InletGuideVanePerformance perfPntToAdd);
+	std::vector <InletGuideVanePerformance> getOpPntPerf();
+
 private:
 
 	double _anglPosn;  //positive is closed
@@ -44,7 +48,9 @@ private:
 
 	//not currently used by may be a good idea to reference the same airfoil configuration that exists in the
 	// stages vector so that this object and that stage is consistent
-	CompressorAirfoilConfiguration *_airfoilConfig;
+	CompressorAirfoilConfiguration *m_airfoilConfig;
+
+	std::vector <InletGuideVanePerformance> m_opPntPerf;
 
 };
 

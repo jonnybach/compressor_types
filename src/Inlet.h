@@ -8,16 +8,26 @@
 #ifndef INLET_H_
 #define INLET_H_
 
+#include <vector>
+#include "InletPerformance.h"
+
 class Inlet {
 public:
 	Inlet();
-	Inlet(double calibFactor);
+	Inlet(double flangePressure, double scrollCalibFactor);
 	virtual ~Inlet();
 
-	double getCalibFactor();
+	double getScrollCalibFactor();
+	double getFlangePressure();
+
+	void addPerformancePoint(int opPnt, InletPerformance perfPntToAdd);
+	std::vector <InletPerformance> getOpPntPerf();
 
 private:
-	double _calibFactor;
+	double _scrollCalibFactor;
+	double _flangePressure;
+
+	std::vector <InletPerformance> m_opPntPerf;
 
 };
 

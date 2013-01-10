@@ -57,8 +57,8 @@ public:
 
 	void setHpaConfig(double beta1, double delBeta, double tqc, double avdr, double machIn);
 
+	double getRadiusDelta() const;
 	double getRadiusMean() const;
-	//double getRadius() const;
 
 	double getPqC() const;
 	double getTqC() const;

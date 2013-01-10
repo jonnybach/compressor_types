@@ -83,6 +83,14 @@ void AirfoilSectionConfiguration::setTePoint( AnnulusPoint newTePnt )
 	//delete(_tePnt);
 	_tePnt = newTePnt;
 }
+
+double AirfoilSectionConfiguration::getRadiusDelta() const {
+	double r_le = _lePnt.getRadius();
+	double r_te = _tePnt.getRadius();
+	double delR = std::abs(r_le - r_te);
+	return delR;
+}
+
 double AirfoilSectionConfiguration::getRadiusMean() const
 {
 	double r_le = _lePnt.getRadius();

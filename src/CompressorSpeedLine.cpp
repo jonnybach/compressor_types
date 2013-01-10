@@ -8,9 +8,9 @@
 #include <fstream>
 
 //UNCOMMENT TO USE GNU SCIENTIFIC LIBRARY SPLINE INTERPOLATION METHODS
-#include <gsl/gsl_errno.h>
-#include <gsl/gsl_sys.h>
-#include <gsl/gsl_spline.h>
+//#include <gsl/gsl_errno.h>
+//#include <gsl/gsl_sys.h>
+//#include <gsl/gsl_spline.h>
 
 //UNCOMMENT TO USE WILD MAGIC GEOMETRY LIBRARY INTERPOLATION METHODS
 //#include "Wm5IntpAkimaNonuniform1.h"
@@ -25,7 +25,6 @@ extern "C" {
 
 CompressorSpeedLine::CompressorSpeedLine() {
 	// TODO Auto-generated constructor stub
-	_shaftSpeed = 10;
 }
 
 CompressorSpeedLine::~CompressorSpeedLine() {
@@ -128,32 +127,32 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, doub
 		etaAdiInterp = etaAkimIntrp(pressureRatio);
 		*/
 
-		//initialize a spline accelerator type
-		gsl_interp_accel *acc = gsl_interp_accel_alloc();
-
-		//initialize the w corrected spline type
-		gsl_spline *wSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-		gsl_spline_init(wSpline, pRatio, wInlet, numElems);
-		wInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
-		if ( gsl_isnan(wInterp) ) {
-			//throw exception
-		}
-
-		//reset the accelerator for the eta interpolation
-		gsl_interp_accel_reset(acc);
-
-		//initialize the eta spline type
-		gsl_spline *etaSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-		gsl_spline_init(etaSpline, pRatio, etaAdi, numElems);
-		etaAdiInterp = gsl_spline_eval(etaSpline, pressureRatio, acc);
-		if ( gsl_isnan(etaAdiInterp) ) {
-			//throw exception
-		}
-
-		//free the memory allocated for the spline types
-		gsl_spline_free(wSpline);
-		gsl_spline_free(etaSpline);
-		gsl_interp_accel_free(acc);
+//		//initialize a spline accelerator type
+//		gsl_interp_accel *acc = gsl_interp_accel_alloc();
+//
+//		//initialize the w corrected spline type
+//		gsl_spline *wSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
+//		gsl_spline_init(wSpline, pRatio, wInlet, numElems);
+//		wInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
+//		if ( gsl_isnan(wInterp) ) {
+//			//throw exception
+//		}
+//
+//		//reset the accelerator for the eta interpolation
+//		gsl_interp_accel_reset(acc);
+//
+//		//initialize the eta spline type
+//		gsl_spline *etaSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
+//		gsl_spline_init(etaSpline, pRatio, etaAdi, numElems);
+//		etaAdiInterp = gsl_spline_eval(etaSpline, pressureRatio, acc);
+//		if ( gsl_isnan(etaAdiInterp) ) {
+//			//throw exception
+//		}
+//
+//		//free the memory allocated for the spline types
+//		gsl_spline_free(wSpline);
+//		gsl_spline_free(etaSpline);
+//		gsl_interp_accel_free(acc);
 
 	}
 
@@ -168,11 +167,11 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	CompressorStage crntStage = *( _stages[stageNmbr-1] );
 	int numElems = crntStage.getOpPntPerf().size();
 	double pRatio[numElems];
-	double tmpPt0[numElems];
-	double tmpPt1[numElems];
-	double tmpPt2[numElems];
-	double tmpPt3[numElems];
-	double tmpPt4[numElems];
+	double tmpRtrPt1Abs[numElems];
+	double tmpRtrPt1Rel[numElems];
+	double tmpRtrPt2Rel[numElems];
+	double tmpStrPt1[numElems];
+	double tmpStrPt2[numElems];
 
 	double pRatioMin = 1e9;
 	double pRatioMax = -1e9;
@@ -184,11 +183,11 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	for ( it = vStgPrf.begin() ; it != vStgPrf.end(); ++it, ++i) {
 		opPntNmbr = (*it).getOptPntNmbr();
 		pRatio[i] = _opPnts[opPntNmbr-1].getPressRatio();
-		tmpPt0[i] = (*it).getPt0();
-		tmpPt1[i] = (*it).getPt1();
-		tmpPt2[i] = (*it).getPt2();
-		tmpPt3[i] = (*it).getPt3();
-		tmpPt4[i] = (*it).getPt4();
+		tmpRtrPt1Abs[i] = (*it).getRotorPt1Abs();
+		tmpRtrPt1Rel[i] = (*it).getRotorPt1Rel();
+		tmpRtrPt2Rel[i] = (*it).getRotorPt2Rel();
+		tmpStrPt1[i] = (*it).getStatorPt1();
+		tmpStrPt2[i] = (*it).getStatorPt2();
 
 		pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
 		pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
@@ -207,11 +206,11 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin || onlyLinrIntrp ) ) {
 		//pressureRatio is below min pRatio from array, use linear extrapolation
 
-		pt0Interp = LinearInterpUnsorted(numElems, pRatio, tmpPt0, pressureRatio, 1);
-		pt1Interp = LinearInterpUnsorted(numElems, pRatio, tmpPt1, pressureRatio, 1);
-		pt2Interp = LinearInterpUnsorted(numElems, pRatio, tmpPt2, pressureRatio, 1);
-		pt3Interp = LinearInterpUnsorted(numElems, pRatio, tmpPt3, pressureRatio, 1);
-		pt4Interp = LinearInterpUnsorted(numElems, pRatio, tmpPt4, pressureRatio, 1);
+		pt0Interp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Abs, pressureRatio, 1);
+		pt1Interp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Rel, pressureRatio, 1);
+		pt2Interp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt2Rel, pressureRatio, 1);
+		pt3Interp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt1, pressureRatio, 1);
+		pt4Interp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt2, pressureRatio, 1);
 
 	} else {
 		//pressureRatio is bounded by arrays, use gsl interpolation
@@ -274,10 +273,53 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	}
 
 	//create new compressor stage performance type, initialize with interpolated values and return
-	CompressorStagePerformance newStgPerf = CompressorStagePerformance(-9999, pt0Interp, pt1Interp, pt2Interp, pt3Interp
-			, pt4Interp, 0, 0, 0, 0, 0);
+	CompressorStagePerformance newStgPerf = CompressorStagePerformance(-9999,
+			pt0Interp,
+			pt1Interp,
+			pt2Interp,
+			pt3Interp,
+			pt4Interp,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0,
+			0);
 	return newStgPerf;
 
+}
+
+
+void CompressorSpeedLine::getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab) {
+	double pRatio = _opPnts[operatingPoint].getPressRatio();
+	double wInlet = _opPnts[operatingPoint].getWin();
+	double etaAdi = _opPnts[operatingPoint].getEtaAdi();
+	*pr = pRatio;
+	*wIn = wInlet;
+	*etaAdiab = etaAdi;
+}
+
+CompressorStagePerformance CompressorSpeedLine::getStagePerfAtOpPnt(int operatingPoint, int stageNmbr) {
+	//create arrays of pressure ratio and mass flow
+	CompressorStage crntStage = *( _stages[stageNmbr-1] );
+	CompressorStagePerformance stgPerf = crntStage.getOpPntPerf().at(operatingPoint);
+	return stgPerf;
 }
 
 double CompressorSpeedLine::getShaftSpeed() {

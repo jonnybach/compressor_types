@@ -31,6 +31,9 @@ public:
 	void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
 
+	void getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab);
+	CompressorStagePerformance getStagePerfAtOpPnt(int operatingPoint, int stageNmbr);
+
 	//shaft speed accessors
 	double getShaftSpeed();
 	void setShaftSpeed(double shaftSpeed);

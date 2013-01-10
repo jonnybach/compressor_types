@@ -16,8 +16,10 @@
 #include "CompressorStage.h"
 #include "CompressorAnnulus.h"
 #include "LossCorrelationData.h"
+#include "StringTrimmers.h"
 
-Compressor::Compressor() {
+Compressor::Compressor() : _annulus(NULL), _inlet(NULL), _igv(NULL), _diffuser(NULL), _lossCorrData(NULL)
+	, _desPnt(NULL) {
 	// TODO Auto-generated constructor stub
 }
 
@@ -127,10 +129,13 @@ CompressorStage *Compressor::stageWithName(std::string stageName) {
 	bool foundStage = false;
 	CompressorStage *stageRef = 0;
 
+	std::string lowStgName(stageName);
+	stolower(lowStgName);
+
 	std::vector<CompressorStage *>::iterator it;
 	for ( it=_stages.begin() ; it < _stages.end(); it++) {
 		stageRef = *it;
-		if ( stageRef->getStageName().find(stageName, 0 ) != std::string::npos ) {
+		if ( stageRef->getStageName().find(lowStgName, 0 ) != std::string::npos ) {
 			foundStage = true;
 			break;  //end looping
 		} else {
@@ -149,10 +154,13 @@ CompressorStage *Compressor::findOrCreateStageWithName(std::string stageName) {
 	bool foundStage = false;
 	CompressorStage *stageRef = 0;
 
+	std::string lowStgName(stageName);
+	stolower(lowStgName);
+
 	std::vector<CompressorStage *>::iterator it;
 	for ( it=_stages.begin() ; it != _stages.end(); it++) {
 		stageRef = *it;
-		if ( stageRef->getStageName().find(stageName, 0 ) != std::string::npos ) {
+		if ( stageRef->getStageName().find(lowStgName, 0 ) != std::string::npos ) {
 			foundStage = true;
 			break;  //end looping
 		} else {
@@ -161,7 +169,7 @@ CompressorStage *Compressor::findOrCreateStageWithName(std::string stageName) {
 	}
 
 	if ( !foundStage ) {
-		stageRef = new CompressorStage(stageName);
+		stageRef = new CompressorStage(lowStgName);
 		//add newly created stage to stages vector
 		_stages.push_back(stageRef);
 	}

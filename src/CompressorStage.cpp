@@ -38,8 +38,15 @@ void CompressorStage::addPerformancePoint(int index, CompressorStagePerformance 
 
 }
 
-//accessor methods
 std::vector <CompressorStagePerformance> CompressorStage::getOpPntPerf() {	return _optPntPerf; }
+
+CompressorStagePerformance CompressorStage::getOpPntPerfAtIndex(int index) {
+	return _optPntPerf.at(index);
+}
+
+void CompressorStage::replaceOpPntPerfAtIndex(int index, CompressorStagePerformance newPerfPnt) {
+	_optPntPerf.at(index) = newPerfPnt;
+}
 
 CompressorAirfoilConfiguration *CompressorStage::getRotor() { return _rotorConfig; }
 

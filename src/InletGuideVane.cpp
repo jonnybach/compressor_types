@@ -39,6 +39,16 @@ InletGuideVane::~InletGuideVane() {
 	// TODO Auto-generated destructor stub
 }
 
+void InletGuideVane::addPerformancePoint(int opPnt, InletGuideVanePerformance perfPntToAdd) {
+	//increase capacity if index is greater
+	std::vector<InletGuideVanePerformance>::iterator it;
+
+	 it = m_opPntPerf.begin();
+	 m_opPntPerf.insert(it+opPnt, perfPntToAdd);
+}
+
+std::vector <InletGuideVanePerformance> InletGuideVane::getOpPntPerf() { return m_opPntPerf; }
+
 double InletGuideVane::getPosition() { return _anglPosn; }
 
 double InletGuideVane::getPtLoss() { return _delPtLoss; }
@@ -54,5 +64,6 @@ double InletGuideVane::getR1Alpha() {
 }
 
 CompressorAirfoilConfiguration *InletGuideVane::getAirfoilConfig() {
-	throw std::exception(); //not fully implemented yet, just a placeholder, let developer know this
-	return _airfoilConfig; }
+	throw std::exception(); //not fully implemented yet, just a placeholder.
+	//return _airfoilConfig;
+}

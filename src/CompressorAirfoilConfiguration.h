@@ -28,19 +28,20 @@ public:
 		double betaMtlIn,
 		double betaMtlOut,
 		double tipClrToHgt,
-		double delBetaM,
+		double betaInAir,
+		double delBetaAir,
 		double avdr,
 		double machIn,
 		double delDevn,
 		double delLoss,
-		//double dsnStagePratio,
-		//double dsnAlphaExit,
 		double bleedFrac
 		);
 
 	virtual ~CompressorAirfoilConfiguration();
 
-	void setHpaConfig(double beta1metal, double delBetaM, double tqc, double avdr, double machIn);
+	void setDesignedParams(double sqc, double tqc, double betaMtlIn, double betaMtlOut
+			, double cambrAng, double stagrAng);
+	void setHpaConfig(double betaInAir, double delBetaAir, double tqc, double avdr, double machIn);
 
 	AirfoilType getAirfoilType();
 
@@ -48,17 +49,20 @@ public:
 
 	double getSqc();
 	double getTqc();
+
 	double getAqc();
 	double getOqs();
-
 	double getShapeK();
 
+	double getCamberAng();
 	double getStagrAng();
+
 	double getBetaMtlIn();
 	double getBetaMtlOut();
 
 	double getTipClrToHgt();
 
+	double getBetaIn();
 	double getDelBetaM();
 	double getAvdr();
 	double getMachIn();
@@ -83,40 +87,39 @@ public:
 
 private:
 
-	AirfoilType _airfoilType;
+	AirfoilType m_airfoilType;
 
-	int _numBlades;
+	int m_numBlades;
 
-	double _sqc;		//pitch to chord
-	double _tqc;		//thickness to chord
-	double _aqc;		//location max thickness to chord
-	double _oqs;		//throat to pitch
+	double m_sqc;		//pitch to chord
+	double m_tqc;		//thickness to chord
+	double m_aqc;		//location max thickness to chord
+	double m_oqs;		//throat to pitch
 
-	double _shapeK;		//shape coeff.  Consult NACA SP 36.  I think they talk about this.
+	double m_shapeK;	//shape coeff.  Consult NACA SP 36.  I think they talk about this.
 						// Related to how similar the airfoil is to the standard NACA/DCA airfoils
 						// from the correlations
 
-	double _stagrAng;   //stagger angle (deg)
-	double _betaMin;	//in metal angle (deg)
-	double _betaMout;	//out metal angle (deg)
+	double m_camberAng; //camber angle  (deg)
+	double m_stagrAng;  //stagger angle (deg)
+	double m_betaMin;	//in metal angle (deg)
+	double m_betaMout;	//out metal angle (deg)
 
-	double _tipClrToHgt; //ratio of tip clearance to height
+	double m_tipClrToHgt; //ratio of tip clearance to height
 
 	//HPA specific parameters
-	double _delBetaM;	  //change in metal angle in to out
-	double _avdr;		  //axial velocity density ratio
-	double _machIn;		  //approach mach number
+	double m_betaIn;	  //relative air inlet angle
+	double m_delBeta;	  //change in air angle in to out (flow turning)
+	double m_avdr;		  //axial velocity density ratio
+	double m_machIn;		  //approach mach number
 
-	double _delDevn;	  //Comp1D specific deviation correction adder
-	double _delLoss;	  //Comp1D specific loss correction adder
+	double m_delDevn;	  //Comp1D specific deviation correction adder
+	double m_delLoss;	  //Comp1D specific loss correction adder
 
-	//double _stagePratio;  //pressure ratio across stage (design parameter for blades)
-	//double _alphaExit;	  //absolute exit flow angle (design parameter for vanes)
+	double m_bleedFrac;	  //fraction amount of inlet mass flow extracted just upstream of airfoil row
 
-	double _bleedFrac;	  //fraction amount of inlet mass flow extracted just upstream of airfoil row
-
-	AnnulusPoint *_hubLe, *_hubTe;
-	AnnulusPoint *_caseLe, *_caseTe;
+	AnnulusPoint *m_hubLe, *m_hubTe;
+	AnnulusPoint *m_caseLe, *m_caseTe;
 
 };
 

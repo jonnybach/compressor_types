@@ -23,97 +23,109 @@ CompressorAirfoilConfiguration::CompressorAirfoilConfiguration(
 CompressorAirfoilConfiguration::CompressorAirfoilConfiguration(
 		AirfoilType airfoilType, int numBlades, double sqc, double tqc, double aqc, double oqs, double shapeK
 		, double stagrAng, double betaMtlIn, double betaMtlOut, double tipClrToHgt
-		, double delBetaM, double avdr, double machIn, double delDevn, double delLoss
+		, double betaInAir, double delBetaAir, double avdr, double machIn, double delDevn, double delLoss
 		, double bleedFrac ) {
 
-	_airfoilType = airfoilType;
-	_numBlades = numBlades;
-	_sqc = sqc;
-	_tqc = tqc;
-	_aqc = aqc;
-	_oqs = oqs;
-	_shapeK = shapeK;
-	_stagrAng = stagrAng;
-	_betaMin = betaMtlIn;
-	_betaMout = betaMtlOut;
-	_tipClrToHgt = tipClrToHgt;
-	_delBetaM = delBetaM;
-	_avdr = avdr;
-	_machIn = machIn;
-	_delDevn = delDevn;
-	_delLoss = delLoss;
-	_bleedFrac = bleedFrac;
+	m_airfoilType = airfoilType;
+	m_numBlades = numBlades;
+	m_sqc = sqc;
+	m_tqc = tqc;
+	m_aqc = aqc;
+	m_oqs = oqs;
+	m_shapeK = shapeK;
+	m_stagrAng = stagrAng;
+	m_betaMin = betaMtlIn;
+	m_betaMout = betaMtlOut;
+	m_tipClrToHgt = tipClrToHgt;
+
+	m_betaIn = betaInAir;
+	m_delBeta = delBetaAir;
+	m_avdr = avdr;
+	m_machIn = machIn;
+	m_delDevn = delDevn;
+	m_delLoss = delLoss;
+	m_bleedFrac = bleedFrac;
 }
 
 CompressorAirfoilConfiguration::~CompressorAirfoilConfiguration() {
 	// TODO Auto-generated destructor stub
 }
 
-void CompressorAirfoilConfiguration::setHpaConfig(double beta1metal, double delBetaM, double tqc, double avdr, double machIn) {
-	_betaMin = beta1metal;
-	_delBetaM = delBetaM;
-	_tqc = tqc;
-	_avdr = avdr;
-	_machIn = machIn;
+void CompressorAirfoilConfiguration::setDesignedParams(double sqc, double tqc, double betaMtlIn, double betaMtlOut, double cambrAng, double stagrAng) {
+	m_sqc = sqc;
+	m_tqc = tqc;
+	m_betaMin = betaMtlIn;
+	m_betaMout = betaMtlOut;
+	m_camberAng = cambrAng;
+	m_stagrAng = stagrAng;
 }
 
-AirfoilType CompressorAirfoilConfiguration::getAirfoilType() { return _airfoilType; }
+void CompressorAirfoilConfiguration::setHpaConfig(double betaInAir, double delBetaAir, double tqc, double avdr, double machIn) {
+	m_betaIn = betaInAir;
+	m_delBeta = delBetaAir;
+	m_tqc = tqc;
+	m_avdr = avdr;
+	m_machIn = machIn;
+}
 
-int CompressorAirfoilConfiguration::getNumBlades() { return _numBlades; }
+AirfoilType CompressorAirfoilConfiguration::getAirfoilType() { return m_airfoilType; }
 
-double CompressorAirfoilConfiguration::getSqc() { return _sqc; }
-double CompressorAirfoilConfiguration::getTqc() { return _tqc; }
-double CompressorAirfoilConfiguration::getAqc() { return _aqc; }
-double CompressorAirfoilConfiguration::getOqs() { return _oqs; }
+int CompressorAirfoilConfiguration::getNumBlades() { return m_numBlades; }
 
-double CompressorAirfoilConfiguration::getShapeK() { return _shapeK; }
+double CompressorAirfoilConfiguration::getSqc() { return m_sqc; }
+double CompressorAirfoilConfiguration::getTqc() { return m_tqc; }
+double CompressorAirfoilConfiguration::getAqc() { return m_aqc; }
+double CompressorAirfoilConfiguration::getOqs() { return m_oqs; }
 
-double CompressorAirfoilConfiguration::getStagrAng() { return _stagrAng; }
-double CompressorAirfoilConfiguration::getBetaMtlIn() { return _betaMin; }
-double CompressorAirfoilConfiguration::getBetaMtlOut() { return _betaMout; }
+double CompressorAirfoilConfiguration::getShapeK() { return m_shapeK; }
 
-double CompressorAirfoilConfiguration::getTipClrToHgt() { return _tipClrToHgt; }
+double CompressorAirfoilConfiguration::getStagrAng() { return m_stagrAng; }
+double CompressorAirfoilConfiguration::getBetaMtlIn() { return m_betaMin; }
+double CompressorAirfoilConfiguration::getBetaMtlOut() { return m_betaMout; }
 
-double CompressorAirfoilConfiguration::getDelBetaM() { return _delBetaM; }
-double CompressorAirfoilConfiguration::getAvdr() { return _avdr; }
-double CompressorAirfoilConfiguration::getMachIn() { return _machIn; }
+double CompressorAirfoilConfiguration::getTipClrToHgt() { return m_tipClrToHgt; }
 
-double CompressorAirfoilConfiguration::getDelDevn() { return _delDevn; }
-double CompressorAirfoilConfiguration::getDelLoss() { return _delLoss; }
+double CompressorAirfoilConfiguration::getBetaIn() { return m_betaIn; }
+double CompressorAirfoilConfiguration::getDelBetaM() { return m_delBeta; }
+double CompressorAirfoilConfiguration::getAvdr() { return m_avdr; }
+double CompressorAirfoilConfiguration::getMachIn() { return m_machIn; }
+
+double CompressorAirfoilConfiguration::getDelDevn() { return m_delDevn; }
+double CompressorAirfoilConfiguration::getDelLoss() { return m_delLoss; }
 
 //double CompressorAirfoilConfiguration::getDsnStagePratio() { return _stagePratio; }
 //double CompressorAirfoilConfiguration::getDsnAlphaExit() { return _alphaExit; }
 
-double CompressorAirfoilConfiguration::getBleedFrac() { return _bleedFrac; }
+double CompressorAirfoilConfiguration::getBleedFrac() { return m_bleedFrac; }
 void CompressorAirfoilConfiguration::setBleedFrac(double bleedFraction) {
-	_bleedFrac = bleedFraction;
+	m_bleedFrac = bleedFraction;
 }
 
-AnnulusPoint *CompressorAirfoilConfiguration::getHubLe() { return _hubLe; }
-AnnulusPoint *CompressorAirfoilConfiguration::getHubTe() { return _hubTe; }
-AnnulusPoint *CompressorAirfoilConfiguration::getCaseLe() { return _caseLe; }
-AnnulusPoint *CompressorAirfoilConfiguration::getCaseTe() { return _caseTe; }
+AnnulusPoint *CompressorAirfoilConfiguration::getHubLe() { return m_hubLe; }
+AnnulusPoint *CompressorAirfoilConfiguration::getHubTe() { return m_hubTe; }
+AnnulusPoint *CompressorAirfoilConfiguration::getCaseLe() { return m_caseLe; }
+AnnulusPoint *CompressorAirfoilConfiguration::getCaseTe() { return m_caseTe; }
 
 void CompressorAirfoilConfiguration::setSailPoints( AnnulusPoint *hubLe, AnnulusPoint *hubTe, AnnulusPoint *caseLe, AnnulusPoint *caseTe ) {
 	//delete(_hubLe);
 	//delete(_hubTe);
 	//delete(_caseLe);
 	//delete(_caseTe);
-	_hubLe = hubLe;
-	_hubTe = hubTe;
-	_caseLe = caseLe;
-	_caseTe = caseTe;
+	m_hubLe = hubLe;
+	m_hubTe = hubTe;
+	m_caseLe = caseLe;
+	m_caseTe = caseTe;
 }
 
 double CompressorAirfoilConfiguration::calcXnull() {
 
-	if ( !_hubTe || !_hubLe || !_caseTe || !_caseLe ) { throw std::exception(); }
+	if ( !m_hubTe || !m_hubLe || !m_caseTe || !m_caseLe ) { throw std::exception(); }
 
 	double xh1, xh2, xc1, xc2; //axial location of hub and casing sail points
-	xh1 = _hubLe->getX();
-	xh2 = _hubTe->getX();
-	xc1 = _caseLe->getX();
-	xc2 = _caseTe->getX();
+	xh1 = m_hubLe->getX();
+	xh2 = m_hubTe->getX();
+	xc1 = m_caseLe->getX();
+	xc2 = m_caseTe->getX();
 
 	double xavg = (xh1 + xh2 + xc1 + xc2)/4;
 	return xavg;
