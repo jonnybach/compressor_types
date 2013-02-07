@@ -41,14 +41,14 @@ public:
 			, double speed);
 
 
-	double getTamb();
-	double getPamb();
-	double getPhi();
-	double getShaftSpeed();
-	double getWcorct();
-	double getWin();
-	double getEtaAdi();
-	double getPressRatio();
+	double getTamb() const;
+	double getPamb() const;
+	double getPhi() const;
+	double getShaftSpeed() const;
+	double getWcorct() const;
+	double getWin() const;
+	double getEtaAdi() const;
+	double getPressRatio() const;
 
 private:
 	//members

@@ -44,64 +44,64 @@ public:
 		double diffLiebStator,
 		double diffEqRatioStator,
 		double deHallerStator,
-		double stageReact);
+		double stageReact,
+		double rotorAspRat,
+		double statorAspRat,
+		double rotorNumAfs,
+		double statorNumAfs
+	);
 
 	virtual ~CompressorStagePerformance();
 
 	//accessors (properties)
-	int getOptPntNmbr();
+	int getOptPntNmbr() const;
 
-	double getRotorPt1Abs();
-	void setRotorPt1Abs(double rotorPt1Abs);
+	double getRotorPt1Abs() const;
+	double getRotorPt1Rel() const;
+	double getRotorPt2Rel() const;
 
-	double getRotorPt1Rel();
-	void setRotorPt1Rel(double rotorPt1Rel);
+	double getStatorPt1() const;
+	double getStatorPt2() const;
 
-	double getRotorPt2Rel();
-	void setRotorPt2Rel(double rotorPt2Rel);
+	double getRotorTt1Abs() const;
+	double getRotorTt1Rel() const;
+	double getRotorTt2Rel() const;
 
-	double getStatorPt1();
-	void setStatorPt1(double PtStator1);
+	double getStatorTt1() const;
+	double getStatorTt2() const;
 
-	double getStatorPt2();
-	void setStatorPt2(double statorPt2);
+	double getRotorBeta1() const;
+	double getRotorBeta2() const;
+	double getStatorAlpha1() const;
+	double getStatorAlpha2() const;
 
-	double getRotorTt1Abs();
-	void setRotorTt1Abs(double rotorTt1Abs);
+	double getRotorBeta1Metal() const;
+	double getRotorBeta2Metal() const;
+	double getStatorAlpha1Metal() const;
+	double getStatorAlpha2Metal() const;
 
-	double getRotorTt1Rel();
-	void setRotorTt1Rel(double rotorPt1Rel);
+	double getStagePi() const;
+	double getStageEtaAdiab() const;
+	double getStageWork() const;
+	double getRotorPhi() const;
+	double getStatorPhi() const;
+	double getWheelSpeed() const;
 
-	double getRotorTt2Rel();
-	void setRotorTt2Rel(double rotorPt2Rel);
+	double getDiffLiebRotor() const;
+	double getDiffEqRatRotor() const;
+	double getDeHallerRotor() const;
 
-	double getStatorTt1();
-	void setStatorTt1(double PtStator1);
+	double getDiffLiebStator() const;
+	double getDiffEqRatStator() const;
+	double getDeHallerStator() const;
 
-	double getStatorTt2();
-	void setStatorTt2(double statorPt2);
+	double getStageReaction() const;
 
-	double getRotorBeta1();
-	double getRotorBeta2();
-	double getStatorAlpha1();
-	double getStatorAlpha2();
+	double getRotorAspRatio() const;
+	double getStatorAspRatio() const;
 
-	double getStagePi();
-	double getStageEtaAdiab();
-	double getStageWork();
-	double getRotorPhi();
-	double getStatorPhi();
-	double getWheelSpeed();
-
-	double getDiffLiebRotor();
-	double getDiffEqRatRotor();
-	double getDeHallerRotor();
-
-	double getDiffLiebStator();
-	double getDiffEqRatStator();
-	double getDeHallerStator();
-
-	double getStageReaction();
+	double getRotorNumAirfoils() const;
+	double getStatorNumAirfoils() const;
 
 private:
 	//members
@@ -140,6 +140,17 @@ private:
 	double m_deHallrStr;
 
 	double m_stgRct;
+
+	double m_beta1m;
+	double m_beta2m;
+	double m_alpha3m;
+	double m_alpha4m;
+
+	double m_aspRatRtr;
+	double m_aspRatSttr;
+
+	double m_numAfsRtr;
+	double m_numAfsSttr;
 
 };
 

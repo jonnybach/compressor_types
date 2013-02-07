@@ -300,11 +300,19 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 			0,
 			0,
 			0,
+			0,
+			0,
+			0,
+			0,
 			0);
 	return newStgPerf;
 
 }
 
+const CompressorOperatingPoint* CompressorSpeedLine::getOpPnt(int operatingPoint) {
+	const CompressorOperatingPoint *pntToReturn = &_opPnts[operatingPoint];
+	return pntToReturn;
+}
 
 void CompressorSpeedLine::getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab) {
 	double pRatio = _opPnts[operatingPoint].getPressRatio();

@@ -55,12 +55,12 @@ void CompressorOperatingPoint::setOperatingPoint(int opPntNmbr, double inletTemp
 
 }
 
-double CompressorOperatingPoint:: getTamb() { return _tempIn; }
-double CompressorOperatingPoint::getPamb() { return _pressIn; }
-double CompressorOperatingPoint::getPhi() { return _phi; }
-double CompressorOperatingPoint::getShaftSpeed() { return _speed; }
-double CompressorOperatingPoint::getWcorct() { return _wCorct; }
-double CompressorOperatingPoint::getWin() { return _wInlet; }
-double CompressorOperatingPoint::getEtaAdi() { return _etaAdi; }
-double CompressorOperatingPoint::getPressRatio() { return _pressRatio; }
+double CompressorOperatingPoint:: getTamb() const { return _tempIn; }
+double CompressorOperatingPoint::getPamb() const { return _pressIn; }
+double CompressorOperatingPoint::getPhi() const { return _phi; }
+double CompressorOperatingPoint::getShaftSpeed() const { return _speed; }
+double CompressorOperatingPoint::getWcorct() const { return _wCorct; }
+double CompressorOperatingPoint::getWin() const { return _wInlet; }
+double CompressorOperatingPoint::getEtaAdi() const { return _etaAdi; }
+double CompressorOperatingPoint::getPressRatio() const { return _pressRatio; }
 
