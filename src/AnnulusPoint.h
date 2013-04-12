@@ -26,6 +26,7 @@ public:
 
 	double axialAreaTo(AnnulusPoint *otherPoint);
 	double frustumAreaTo(AnnulusPoint *otherPoint);
+	double angleBetween(AnnulusPoint *otherPoint);
 
 private:
 	std::string _label;

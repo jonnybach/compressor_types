@@ -48,6 +48,28 @@ double CartesianPoint::axialArea() {
    return ( M_PI * pow(this->radius(), 2) );
 }
 
+double CartesianPoint::distanceTo(CartesianPoint *otherPnt) {
+	double delX = (this->_X - otherPnt->getX());
+	double delY = (this->_Y - otherPnt->getY());
+	double delZ = (this->_Z - otherPnt->getZ());
+	double dist = sqrt( pow(delX,2.0) + pow(delY,2.0) + pow(delZ,2.0)  );
+	return dist;
+}
+
+double CartesianPoint::angleInXyPlane(CartesianPoint *otherPnt) {
+	double delX = (this->_X - otherPnt->getX());
+	double delY = (this->_Y - otherPnt->getY());
+	double ang = atan2(delY, delX);
+	return ang; //radians
+}
+
+double CartesianPoint::angleInXzPlane(CartesianPoint *otherPnt) {
+	double delX = (this->_X - otherPnt->getX());
+	double delZ = (this->_Z - otherPnt->getZ());
+	double ang = atan2(delZ, delX);
+	return ang; //radians
+}
+
 bool CartesianPoint::equals(CartesianPoint *pntToCompare) {
 
     double Tol = 0.00000005;

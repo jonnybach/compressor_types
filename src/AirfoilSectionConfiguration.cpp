@@ -16,7 +16,7 @@ AirfoilSectionConfiguration::AirfoilSectionConfiguration()
 
 AirfoilSectionConfiguration::AirfoilSectionConfiguration(double radius, double pqc, double tqc, double aqc
 	, double chord, double stagrAng, double betaMtlIn, double betaMtlOut
-	, double beta1, double delBeta, double avdr, double machIn, double delDevn, double delLoss )
+	, double beta1, double delBeta, double avdr, double machInRel, double delDevn, double delLoss )
 {
 	//_radius = radius;
 	_pqc = pqc;
@@ -29,14 +29,14 @@ AirfoilSectionConfiguration::AirfoilSectionConfiguration(double radius, double p
 	_beta1 = beta1;
 	_delBeta = delBeta;
 	_avdr = avdr;
-	_machIn = machIn;
+	_machInRel = machInRel;
 	_delDevn = delDevn;
 	_delLoss = delLoss;
 }
 
 AirfoilSectionConfiguration::AirfoilSectionConfiguration(AnnulusPoint lePoint, AnnulusPoint tePoint,
 	double pqc,	double tqc,	double aqc,	double chord, double stagrAng, double betaMtlIn, double betaMtlOut,
-	double beta1, double delBeta,	double avdr, double machIn,	double delDevn,	double delLoss )
+	double beta1, double delBeta,	double avdr, double machInRel,	double delDevn,	double delLoss )
 {
 	_lePnt = lePoint;
 	_tePnt = tePoint;
@@ -50,7 +50,7 @@ AirfoilSectionConfiguration::AirfoilSectionConfiguration(AnnulusPoint lePoint, A
 	_beta1 = beta1;
 	_delBeta = delBeta;
 	_avdr = avdr;
-	_machIn = machIn;
+	_machInRel = machInRel;
 	_delDevn = delDevn;
 	_delLoss = delLoss;
 }
@@ -61,13 +61,13 @@ AirfoilSectionConfiguration::~AirfoilSectionConfiguration()
 }
 
 void AirfoilSectionConfiguration::setHpaConfig(double beta1, double delBeta
-		, double tqc, double avdr, double machIn)
+		, double tqc, double avdr, double machInRel)
 {
 	_beta1 = beta1;
 	_delBeta = delBeta;
 	_tqc = tqc;
 	_avdr = avdr;
-	_machIn = machIn;
+	_machInRel = machInRel;
 }
 
 AnnulusPoint AirfoilSectionConfiguration::getLePoint() const { return _lePnt; }
@@ -119,7 +119,7 @@ double AirfoilSectionConfiguration::getBetaMtlOut() const { return _betaMout; }
 double AirfoilSectionConfiguration::getBeta1() const { return _beta1; }
 double AirfoilSectionConfiguration::getDelBeta() const { return _delBeta; }
 double AirfoilSectionConfiguration::getAvdr() const { return _avdr; }
-double AirfoilSectionConfiguration::getMachIn() const { return _machIn; }
+double AirfoilSectionConfiguration::getMachInRel() const { return _machInRel; }
 
 double AirfoilSectionConfiguration::getDelDevn() const { return _delDevn; }
 double AirfoilSectionConfiguration::getDelLoss() const { return _delLoss; }

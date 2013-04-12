@@ -41,7 +41,8 @@ enum RootType {
 	ROOT_TYPE_SFM = 6,		// dove tail root trapezoidal - vanes
 	ROOT_TYPE_SW = 7,		// dove tail root variation - vanes
 	ROOT_TYPE_SWM = 8,		// dove tail root trapezoidal variation - vanes
-	ROOT_TYPE_HR = 9		// h root - vanes
+	ROOT_TYPE_HR = 9,		// h root - vanes
+	ROOT_TYPE_VGV = 10		// vgv attachment
 };
 
 namespace sie_comp {

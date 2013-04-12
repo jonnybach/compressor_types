@@ -42,7 +42,7 @@ public:
 		double beta1,
 		double delBeta,
 		double avdr,
-		double machIn,
+		double machInRel,
 		double delDevn,
 		double delLoss
 	);
@@ -75,7 +75,7 @@ public:
 	double getBeta1() const;
 	double getDelBeta() const;
 	double getAvdr() const;
-	double getMachIn() const;
+	double getMachInRel() const;
 
 	double getDelDevn() const;
 	double getDelLoss() const;
@@ -97,11 +97,11 @@ private:
 	double _betaMin;	//in metal angle (deg)  - NOTE: output for HPA airfoils
 	double _betaMout;	//out metal angle (deg) - NOTE: output for HPA airfoils
 
-	//HPA specific parameters
+	double _machInRel;    //inlet relative mach number
+
 	double _beta1;		  //relative inlet flow angle (deg)
 	double _delBeta;	  //change in flow angle in to out (deg)
 	double _avdr;		  //axial velocity density ratio
-	double _machIn;		  //approach mach number
 
 	double _delDevn;	  //Comp1D specific deviation correction adder
 	double _delLoss;	  //Comp1D specific loss correction adder

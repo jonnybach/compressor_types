@@ -50,11 +50,13 @@ double AnnulusPoint::getX() const { return _X; }
 double AnnulusPoint::getRadius() const { return _Y; }
 
 std::string AnnulusPoint::getLabel() const { return _label; }
-void AnnulusPoint::setLabel( std::string newLabel ) {
+void AnnulusPoint::setLabel( std::string newLabel )
+{
 	_label = std::string( newLabel );
 }
 
-double AnnulusPoint::axialAreaTo(AnnulusPoint *otherPoint ) {
+double AnnulusPoint::axialAreaTo(AnnulusPoint *otherPoint )
+{
 
     double MyRad, OtherRad;
     MyRad = this->getRadius();
@@ -65,7 +67,8 @@ double AnnulusPoint::axialAreaTo(AnnulusPoint *otherPoint ) {
 
 }
 
-double AnnulusPoint::frustumAreaTo(AnnulusPoint *otherPoint ) {
+double AnnulusPoint::frustumAreaTo(AnnulusPoint *otherPoint )
+{
 
     double MyRad, OtherRad;
     MyRad = this->getRadius();
@@ -75,4 +78,9 @@ double AnnulusPoint::frustumAreaTo(AnnulusPoint *otherPoint ) {
     double frustArea = M_PI * (MyRad + OtherRad) * sqrt( pow( (MyRad - OtherRad),2) + pow(delX, 2) );
     return frustArea;
 
+}
+
+double AnnulusPoint::angleBetween(AnnulusPoint *otherPoint) {
+	double ang = this->angleInXyPlane(otherPoint);
+	return ang; //radians
 }

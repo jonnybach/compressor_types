@@ -13,44 +13,57 @@ CompressorStagePerformance::CompressorStagePerformance() {
 }
 
 CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
-	double ptRtrPt1Abs, double ptRtrPt1Rel,	double ptRtrPt2Rel, double ptStrPt1, double ptStrPt2,
-	double ttRtrTt1Abs, double ptRtrTt1Rel,	double ptRtrTt2Rel, double ptStrTt1, double ptStrTt2,
-	double betaRtr1,	double betaRtr2,	double alphaStr1,	double alphaStr2,
+	double rotorPt1Abs, double rotorPt1Rel,	double rotorPt2Rel, double statorPt1, double statorPt2,
+	double rotorTt1Abs, double rotorTt1Rel,	double rotorTt2Rel, double statorTt1, double statorTt2,
+	double rotorBeta1,	double rotorBeta2,	double statorAlpha1, double statorAlpha2,
 	double stagePi, double stageEtaAdb, double stageWork, double rotorPhi,
 	double statorPhi, double wheelSpeed,
 	double diffLiebRotor, double diffEqRatioRotor, double deHallerRotor,
 	double diffLiebStator, double diffEqRatioStator, double deHallerStator,
 	double stageReact, double rotorAspRat, double statorAspRat, double rotorNumAfs, double statorNumAfs) {
+
 	m_opPntNmbr = opPntNumber;
-	m_rtrPt1Abs = ptRtrPt1Abs;
-	m_rtrPt1Rel = ptRtrPt1Rel;
-	m_rtrPt2Rel = ptRtrPt2Rel;
-	m_strPt1 = ptStrPt1;
-	m_strPt2 = ptStrPt2;
-	m_rtrTt1Abs = ttRtrTt1Abs;
-	m_rtrTt1Rel = ptRtrTt1Rel;
-	m_rtrTt2Rel = ptRtrTt2Rel;
-	m_strTt1 = ptStrTt1;
-	m_strTt2 = ptStrTt2;
-	m_beta1 = betaRtr1;
-	m_beta2 = betaRtr2;
-	m_alpha3 = alphaStr1;
-	m_alpha4 = alphaStr2;
+
+	m_rtrPt1Abs = rotorPt1Abs;
+	m_rtrPt1Rel = rotorPt1Rel;
+	m_rtrPt2Rel = rotorPt2Rel;
+
+	m_strPt1 = statorPt1;
+	m_strPt2 = statorPt2;
+
+	m_rtrTt1Abs = rotorTt1Abs;
+	m_rtrTt1Rel = rotorTt1Rel;
+	m_rtrTt2Rel = rotorTt2Rel;
+
+	m_strTt1 = statorTt1;
+	m_strTt2 = statorTt2;
+
+	m_beta1 = rotorBeta1;
+	m_beta2 = rotorBeta2;
+
+	m_alpha3 = statorAlpha1;
+	m_alpha4 = statorAlpha2;
+
 	m_stgPi = stagePi;
 	m_stgEtaAdb = stageEtaAdb;
 	m_stgWrk = stageWork;
 	m_rtrPhi = rotorPhi;
 	m_sttrPhi = statorPhi;
 	m_whlSpd = wheelSpeed;
+
 	m_diffLiebRtr = diffLiebRotor;
 	m_diffEqRatRtr = diffEqRatioRotor;
 	m_deHallrRtr = deHallerRotor;
+
 	m_diffLiebStr = diffLiebStator;
 	m_diffEqRatStr = diffEqRatioStator;
 	m_deHallrStr = deHallerStator;
+
 	m_stgRct = stageReact;
+
 	m_aspRatRtr = rotorAspRat;
 	m_aspRatSttr = statorAspRat;
+
 	m_numAfsRtr = rotorNumAfs;
 	m_numAfsSttr = statorNumAfs;
 }

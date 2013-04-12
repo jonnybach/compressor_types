@@ -33,15 +33,19 @@ public:
 	double getY();
 	double getZ();
 
-   double radius();
-   double axialArea();
+	double radius();
+	double axialArea();
 
-   bool equals(CartesianPoint *pntToCompare);
+	double distanceTo(CartesianPoint *otherPnt);
+	double angleInXyPlane(CartesianPoint *otherPnt);
+	double angleInXzPlane(CartesianPoint *otherPnt);
 
-   void translate(double delX, double delY, double delZ);
+	bool equals(CartesianPoint *pntToCompare);
 
-   static CartesianPoint *interpolatePointAtX( double X, CartesianPoint *firstPnt, CartesianPoint *secndPnt);
-   static CartesianPoint *interpolatePointAtFrac( double distFraction, CartesianPoint *firstPnt, CartesianPoint *secndPnt );
+	void translate(double delX, double delY, double delZ);
+
+	static CartesianPoint *interpolatePointAtX( double X, CartesianPoint *firstPnt, CartesianPoint *secndPnt);
+	static CartesianPoint *interpolatePointAtFrac( double distFraction, CartesianPoint *firstPnt, CartesianPoint *secndPnt );
 
 
 protected:
