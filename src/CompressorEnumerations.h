@@ -11,8 +11,9 @@
 #include <string>
 
 enum AirfoilType {
-	AIRFOIL_TYPE_NONE = 0,
-	AIRFOIL_TYPE_NACA_DCA = 1,
+	AIRFOIL_TYPE_NONE = -1,
+	AIRFOIL_TYPE_NACA = 0,
+	AIRFOIL_TYPE_DCA = 1,
 	AIRFOIL_TYPE_CDA = 2,
 	AIRFOIL_TYPE_HPA = 3
 };
@@ -52,8 +53,11 @@ inline std::string getAirfoilTypeString(AirfoilType airfoilTypeValue)
 	std::string strType;
 	switch (airfoilTypeValue)
 	{
-	case AIRFOIL_TYPE_NACA_DCA:
-		strType = "NACA/DCA";
+	case AIRFOIL_TYPE_NACA:
+		strType = "NACA";
+		break;
+	case AIRFOIL_TYPE_DCA:
+		strType = "DCA";
 		break;
 	case AIRFOIL_TYPE_CDA:
 		strType = "CDA";
