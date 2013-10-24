@@ -70,6 +70,11 @@ void AirfoilSectionConfiguration::setHpaConfig(double beta1, double delBeta
 	_machInRel = machInRel;
 }
 
+AirfoilSectionResult AirfoilSectionConfiguration::getResult() const { return m_result; };
+void AirfoilSectionConfiguration::setResult(AirfoilSectionResult newResult) {
+    m_result = newResult;
+}
+
 AnnulusPoint AirfoilSectionConfiguration::getLePoint() const { return _lePnt; }
 void AirfoilSectionConfiguration::setLePoint( AnnulusPoint newLePnt )
 {

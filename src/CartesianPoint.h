@@ -47,6 +47,7 @@ public:
 	static CartesianPoint *interpolatePointAtX( double X, CartesianPoint *firstPnt, CartesianPoint *secndPnt);
 	static CartesianPoint *interpolatePointAtFrac( double distFraction, CartesianPoint *firstPnt, CartesianPoint *secndPnt );
 
+	static double polygonArea(double *X, double *Y, int points);
 
 protected:
 	double _X;

@@ -73,6 +73,7 @@ public:
 	//double getDsnStagePratio();
 	//double getDsnAlphaExit();
 
+	bool hasBleed();
 	double getBleedFrac();
 	void setBleedFrac(double bleedFraction);
 
@@ -96,7 +97,7 @@ private:
 	double m_aqc;		//location max thickness to chord
 	double m_oqs;		//throat to pitch
 
-	double m_shapeK;	//shape coeff.  Consult NACA SP 36.  I think they talk about this.
+	double m_shapeK;	//shape coeff.  Consult NACA SP 36.
 						// Related to how similar the airfoil is to the standard NACA/DCA airfoils
 						// from the correlations
 
@@ -117,6 +118,7 @@ private:
 	double m_delLoss;	  //Comp1D specific loss correction adder
 
 	double m_bleedFrac;	  //fraction amount of inlet mass flow extracted just upstream of airfoil row
+	bool m_hasBleed;      //boolean to indicate whether stage has bleed extraction just upstream
 
 	AnnulusPoint *m_hubLe, *m_hubTe;
 	AnnulusPoint *m_caseLe, *m_caseTe;

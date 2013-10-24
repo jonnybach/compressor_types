@@ -40,15 +40,17 @@ public:
 			, double wInlet
 			, double speed);
 
-
 	double getTamb() const;
 	double getPamb() const;
 	double getPhi() const;
 	double getShaftSpeed() const;
 	double getWcorct() const;
+	double getWcorctOut() const;
 	double getWin() const;
 	double getEtaAdi() const;
+	double getEtaPoly() const;
 	double getPressRatio() const;
+	double getDelTqT() const;
 
 private:
 	//members

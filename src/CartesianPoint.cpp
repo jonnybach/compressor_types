@@ -57,9 +57,9 @@ double CartesianPoint::distanceTo(CartesianPoint *otherPnt) {
 }
 
 double CartesianPoint::angleInXyPlane(CartesianPoint *otherPnt) {
-	double delX = (this->_X - otherPnt->getX());
-	double delY = (this->_Y - otherPnt->getY());
-	double ang = atan2(delY, delX);
+	double delX = (otherPnt->getX() - this->_X);
+	double delY = (otherPnt->getY() - this->_Y);
+	double ang = atan2(delY, delX);  //this will calculate the true angle considering the quadrant location
 	return ang; //radians
 }
 
@@ -142,6 +142,22 @@ CartesianPoint *CartesianPoint::interpolatePointAtFrac( double distFraction, Car
 
     CartesianPoint *intrpPnt = new CartesianPoint(Xintrp, Yintrp, Zintrp);
     return intrpPnt;
+
+}
+
+double CartesianPoint::polygonArea(double *X, double *Y, int points) {
+    //  Public-domain function by Darel Rex Finley, 2006.
+    //  http://alienryderflex.com/polygon_area/
+
+    double area=0.0;
+    int i, j = points-1;
+
+    for (i=0; i<points; i++) {
+      area += ( X[j]+X[i]) * (Y[j]-Y[i]);
+      j = i;
+    }
+
+    return area * 0.5;
 
 }
 

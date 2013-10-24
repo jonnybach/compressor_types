@@ -12,6 +12,7 @@
 #include <vector>
 #include "CompressorEnumerations.h"
 #include "AirfoilSectionConfiguration.h"
+#include "AirfoilSectionResult.h"
 #include "AnnulusPoint.h"
 
 class CompressorTwoDAirfoilConfiguration {
@@ -26,7 +27,7 @@ public:
 	const AirfoilSectionConfiguration *getSectionNearSpanFraction(double frac);
 	const AirfoilSectionConfiguration *getSectionAtMidspan();
 	const AirfoilSectionConfiguration *getSectionAtHub();
-	const AirfoilSectionConfiguration *getSectionAtTip();
+	const AirfoilSectionConfiguration *getSectionAtTip(); //TODO: rename to getSectionAtCase for consistency and clarity
 
 	std::vector<AnnulusPoint> getLeSectPoints();
 	std::vector<AnnulusPoint> getTeSectPoints();
@@ -60,7 +61,12 @@ public:
 	double getXnull();
 	void setXnull(double newXnull);
 
+    double getRotSpeed();
+    void setRotSpeed(double newRotSpeed);
+
 	double getSpan();
+
+	double getMassAveTempRecov();
 
 private:
 
@@ -81,6 +87,8 @@ private:
 	//double _tipClearance;
 
 	double _xNull; //meters
+
+	double _rotSpeed;  //rpm
 
 };
 

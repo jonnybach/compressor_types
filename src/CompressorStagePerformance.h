@@ -8,9 +8,6 @@
 #ifndef COMPRESSORSTAGEPERFORMANCE_H_
 #define COMPRESSORSTAGEPERFORMANCE_H_
 
-//forward declarations
-class CompressorOperatingPoint;
-
 class CompressorStagePerformance {
 
 public:
@@ -47,8 +44,12 @@ public:
 		double stageReact,
 		double rotorAspRat,
 		double statorAspRat,
-		double rotorNumAfs,
-		double statorNumAfs
+		int rotorNumAfs,
+		int statorNumAfs,
+		double rotorIncidence,
+		double statorIncidence,
+		double rotorDeviation,
+		double statorDeviation
 	);
 
 	virtual ~CompressorStagePerformance();
@@ -103,6 +104,12 @@ public:
 	double getRotorNumAirfoils() const;
 	double getStatorNumAirfoils() const;
 
+    double getRotorIncidence() const;
+    double getStatorIncidence() const;
+
+    double getRotorDeviation() const;
+    double getStatorDeviation() const;
+
 private:
 	//members
 	int m_opPntNmbr;
@@ -151,6 +158,12 @@ private:
 
 	double m_numAfsRtr;
 	double m_numAfsSttr;
+
+	double m_incRtr;  //rotor incidence angle (deg)
+	double m_incSttr; //stator incidence angle (deg)
+
+	double m_devRtr; //rotor deviation angle (deg)
+	double m_devSttr; //stator deviation angle (deg)
 
 };
 

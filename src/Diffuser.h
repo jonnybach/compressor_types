@@ -8,6 +8,10 @@
 #ifndef DIFFUSER_H_
 #define DIFFUSER_H_
 
+#include <string>
+#include <vector>
+#include "DiffuserPerformance.h"
+
 class Diffuser {
 public:
 	Diffuser();
@@ -17,9 +21,18 @@ public:
 	double getAratio();
 	double getCalibFactor();
 
+	void addPerformancePoint(int index, DiffuserPerformance perfPntToAdd);
+
+	//accessors/properties
+	std::vector <DiffuserPerformance> getOpPntPerf();
+	DiffuserPerformance getOpPntPerfAtIndex(int index);
+	void replaceOpPntPerfAtIndex(int index, DiffuserPerformance newPerfPnt);
+
+
 private:
 	double _areaRatio;
 	double _calibFactor;
+	std::vector <DiffuserPerformance> _optPntPerf;
 
 };
 

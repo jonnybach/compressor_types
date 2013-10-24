@@ -5,7 +5,6 @@
  *      Author: bachm03j
  */
 
-#include <fstream>
 #include "CompressorStagePerformance.h"
 
 CompressorStagePerformance::CompressorStagePerformance() {
@@ -20,7 +19,8 @@ CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
 	double statorPhi, double wheelSpeed,
 	double diffLiebRotor, double diffEqRatioRotor, double deHallerRotor,
 	double diffLiebStator, double diffEqRatioStator, double deHallerStator,
-	double stageReact, double rotorAspRat, double statorAspRat, double rotorNumAfs, double statorNumAfs) {
+	double stageReact, double rotorAspRat, double statorAspRat, int rotorNumAfs, int statorNumAfs,
+	double rotorIncidence, double statorIncidence, double rotorDeviation, double statorDeviation) {
 
 	m_opPntNmbr = opPntNumber;
 
@@ -66,6 +66,13 @@ CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
 
 	m_numAfsRtr = rotorNumAfs;
 	m_numAfsSttr = statorNumAfs;
+
+    m_incRtr = rotorIncidence;
+    m_incSttr = statorIncidence;
+
+    m_devRtr = rotorDeviation;
+    m_devSttr = statorDeviation;
+
 }
 
 CompressorStagePerformance::~CompressorStagePerformance() {
@@ -119,3 +126,9 @@ double CompressorStagePerformance::getStatorAspRatio() const { return m_aspRatSt
 
 double CompressorStagePerformance::getRotorNumAirfoils() const {return m_numAfsRtr; }
 double CompressorStagePerformance::getStatorNumAirfoils() const {return m_numAfsSttr; }
+
+double CompressorStagePerformance::getRotorIncidence() const { return m_incRtr; }
+double CompressorStagePerformance::getStatorIncidence() const { return m_incSttr; }
+
+double CompressorStagePerformance::getRotorDeviation() const { return m_devRtr; }
+double CompressorStagePerformance::getStatorDeviation() const { return m_devSttr; }

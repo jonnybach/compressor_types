@@ -14,6 +14,7 @@
 class CompressorOperatingPoint;
 class CompressorStage;
 class CompressorStagePerformance;
+class DiffuserPerformance;
 
 class CompressorSpeedLine {
 
@@ -25,9 +26,12 @@ public:
 	void addOperatingPoint(CompressorOperatingPoint opPntToAdd);
 	void addStage(CompressorStage stageToAdd);
 	void setStages(std::vector<CompressorStage*> stages);
+	void setDiffuserPerformance(std::vector<DiffuserPerformance> diffPerf);
 
 	void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
+	CompressorOperatingPoint getOpPntForPressureRatio(double pressureRatio);
+	DiffuserPerformance getDiffsrPerfForPressureRatio(double pressureRatio);
 
 	const CompressorOperatingPoint* getOpPnt(int opertaingPoint);
 	void getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab);
@@ -41,6 +45,7 @@ private:
 	//members
 	std::vector<CompressorOperatingPoint> _opPnts;
 	std::vector<CompressorStage *> _stages;
+	std::vector<DiffuserPerformance> m_diffPerf;
 	double _shaftSpeed; //rpm
 
 };

@@ -44,7 +44,12 @@ CompressorAirfoilConfiguration::CompressorAirfoilConfiguration(
 	m_machIn = machIn;
 	m_delDevn = delDevn;
 	m_delLoss = delLoss;
-	m_bleedFrac = bleedFrac;
+
+	//m_bleedFrac = bleedFrac;
+	//if (bleedFrac != 0.0) {
+		//using property so that the hasBleed flag is also set to true
+		this->setBleedFrac(bleedFrac);
+	//}
 }
 
 CompressorAirfoilConfiguration::~CompressorAirfoilConfiguration() {
@@ -96,9 +101,16 @@ double CompressorAirfoilConfiguration::getDelLoss() { return m_delLoss; }
 //double CompressorAirfoilConfiguration::getDsnStagePratio() { return _stagePratio; }
 //double CompressorAirfoilConfiguration::getDsnAlphaExit() { return _alphaExit; }
 
+bool CompressorAirfoilConfiguration::hasBleed() { return m_hasBleed; }
 double CompressorAirfoilConfiguration::getBleedFrac() { return m_bleedFrac; }
 void CompressorAirfoilConfiguration::setBleedFrac(double bleedFraction) {
-	m_bleedFrac = bleedFraction;
+	if (bleedFraction != 0.0) {
+		m_bleedFrac = bleedFraction;
+		m_hasBleed = true;
+	} else {
+		m_bleedFrac = 0.0;
+		m_hasBleed = false;
+	}
 }
 
 AnnulusPoint *CompressorAirfoilConfiguration::getHubLe() { return m_hubLe; }

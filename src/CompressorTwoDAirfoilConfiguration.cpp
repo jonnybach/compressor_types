@@ -9,6 +9,7 @@
 #include <exception>
 #include <cmath>
 
+//ctors and dtors
 
 CompressorTwoDAirfoilConfiguration::CompressorTwoDAirfoilConfiguration()
 {
@@ -25,6 +26,7 @@ CompressorTwoDAirfoilConfiguration::~CompressorTwoDAirfoilConfiguration()
 {
 	// TODO Auto-generated destructor stub
 }
+
 
 void CompressorTwoDAirfoilConfiguration::addSectionConfiguration(AirfoilSectionConfiguration newSectConfig)
 {
@@ -100,6 +102,7 @@ const AirfoilSectionConfiguration *CompressorTwoDAirfoilConfiguration::getSectio
 {
 	return this->getSectionNearSpanFraction(1.0);
 }
+
 
 std::vector<AnnulusPoint > CompressorTwoDAirfoilConfiguration::getLeSectPoints()
 {
@@ -178,6 +181,9 @@ void CompressorTwoDAirfoilConfiguration::setName(std::string newName) { _name = 
 double CompressorTwoDAirfoilConfiguration::getXnull() { return _xNull; }
 void CompressorTwoDAirfoilConfiguration::setXnull(double newXnull) { _xNull = newXnull; }
 
+double CompressorTwoDAirfoilConfiguration::getRotSpeed() { return _rotSpeed; }
+void CompressorTwoDAirfoilConfiguration::setRotSpeed(double newRotSpeed) { _rotSpeed = newRotSpeed; }
+
 double CompressorTwoDAirfoilConfiguration::getSpan()
 {
 	double span = -9999;
@@ -187,6 +193,32 @@ double CompressorTwoDAirfoilConfiguration::getSpan()
 		span = std::abs( rTip - rHub );
 	}
 	return span; //meters
+}
+
+double CompressorTwoDAirfoilConfiguration::getMassAveTempRecov()
+{
+
+    double massFlow;
+    double num;
+
+    double sumNum = 0;
+    double sumMass = 0;
+
+    AirfoilSectionConfiguration sect;
+
+    std::vector<AirfoilSectionConfiguration>::iterator itSect;
+    for ( size_t i = 1; i < _sectConfigs.size(); ++i ) {
+        sect = _sectConfigs.at(i);
+        massFlow = sect.getResult().getMassFlow();
+        num = (sect.getResult().getTempRecov() + _sectConfigs.at(i-1).getResult().getTempRecov()) / 2.0 * massFlow;
+
+        sumNum += num;
+        sumMass += massFlow;
+
+    }
+
+    double aveTemp = sumNum/sumMass;
+    return aveTemp;
 }
 
 /*

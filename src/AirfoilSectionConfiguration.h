@@ -3,15 +3,23 @@
  *
  *  Created on: Sep 11, 2012
  *      Author: bachm03j
+ *
+ *  This class represents the input values into STARMEP (or other meridional flow solver) that have been
+ *   interpolated or re-calculated at the last solved streamline location.  This is different from the original
+ *   user inputs b/c the original inputs do not necessarily lie along a the solved streamline locations but rather
+ *   arbitrary locations based on geometrical requirements.
+ *
  */
 
 #ifndef AIRFOILSECTIONCONFIGURATION_H_
 #define AIRFOILSECTIONCONFIGURATION_H_
 
 #include "CompressorEnumerations.h"
+#include "AirfoilSectionResult.h"
 #include "AnnulusPoint.h"
 
 class AirfoilSectionConfiguration {
+
 public:
 	AirfoilSectionConfiguration();
 
@@ -49,6 +57,9 @@ public:
 
 	virtual ~AirfoilSectionConfiguration();
 
+	AirfoilSectionResult getResult() const;
+	void setResult(AirfoilSectionResult newResult);
+
 	AnnulusPoint getLePoint() const;
 	void setLePoint(AnnulusPoint newLePnt);
 
@@ -85,7 +96,11 @@ private:
 	AnnulusPoint _lePnt; // x, Rad (meters)
 	AnnulusPoint _tePnt; // x, Rad (meters)
 
+	AirfoilSectionResult m_result;
+
 	//double _radius;    //radial location of airfoil section
+
+	//NOTE: values below represent inputs defined by the user of STARMEP.  A set of results should exists that represent the true values used from the calculation
 
 	double _pqc;		//pitch to chord
 	double _tqc;		//thickness to chord
