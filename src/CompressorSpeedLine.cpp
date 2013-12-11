@@ -7,6 +7,7 @@
 
 #include <fstream>
 #include <string>
+#include <exception>
 
 //UNCOMMENT TO USE GNU SCIENTIFIC LIBRARY SPLINE INTERPOLATION METHODS
 //#include <gsl/gsl_errno.h>
@@ -21,6 +22,8 @@
 #include "CompressorOperatingPoint.h"
 #include "CompressorStage.h"
 #include "DiffuserPerformance.h"
+#include "InletPerformance.h"
+#include "InletGuideVanePerformance.h"
 
 extern "C" {
 	#include "Interpolation.h"
@@ -45,87 +48,91 @@ void CompressorSpeedLine::setStages(std::vector<CompressorStage *> stages) { _st
 
 void CompressorSpeedLine::setDiffuserPerformance(std::vector<DiffuserPerformance> diffPerf) { m_diffPerf = diffPerf; }
 
+void CompressorSpeedLine::setInletPerformance(std::vector<InletPerformance> inletPerf) { m_inletPerf = inletPerf; }
 
-void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab) {
-	//interpolates the mass flow and efficiency for a given pressure ratio
+void CompressorSpeedLine::setInletGuideVanePerformance(std::vector<InletGuideVanePerformance> igvPerf) { m_igvPerf = igvPerf; }
 
-	//create arrays of pressure ratio and mass flow
-	int numElems = _opPnts.size();
-	double pRatio[numElems];
-	double wInlet[numElems];
-	double etaAdi[numElems];
 
-	double pRatioMin = 1e9;
-	double pRatioMax = -1e9;
-
-	int i = 0;
-	std::vector<CompressorOperatingPoint>::iterator it;
-	for ( it=_opPnts.begin() ; it < _opPnts.end(); it++, i++) {
-		pRatio[i] = (*it).getPressRatio();
-		wInlet[i] = (*it).getWin();
-		etaAdi[i] = (*it).getEtaAdi();
-
-		pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
-		pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
-
-	}
-
-	double wInterp;
-	double etaAdiInterp;
-
-	//check if pressureRatio is outside min and max bounds of pRatio array
-	// if so use linear interpolation, else use higher order interpolation
-	bool onlyLinrIntrp = true;
-	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin) || onlyLinrIntrp ) {
-		//pressureRatio is below min pRatio from array, use linear extrapolation
-
-		wInterp = LinearInterpUnsorted(numElems, pRatio, wInlet, pressureRatio, 1);
-		etaAdiInterp = LinearInterpUnsorted(numElems, pRatio, etaAdi, pressureRatio, 1);
-
-	} else {
-		//pressureRatio is bounded by arrays, use gsl cubic spline interpolation or akima spline
-
-		/*
-		Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
-		Wm5::IntpAkimaNonuniform1<double> etaAkimIntrp( numElems, pRatio, etaAdi);
-
-		wInterp = wAkimIntrp(pressureRatio);
-		etaAdiInterp = etaAkimIntrp(pressureRatio);
-		*/
-
-//		//initialize a spline accelerator type
-//		gsl_interp_accel *acc = gsl_interp_accel_alloc();
+//void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab) {
+//	//interpolates the mass flow and efficiency for a given pressure ratio
 //
-//		//initialize the w corrected spline type
-//		gsl_spline *wSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-//		gsl_spline_init(wSpline, pRatio, wInlet, numElems);
-//		wInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
-//		if ( gsl_isnan(wInterp) ) {
-//			//throw exception
-//		}
+//	//create arrays of pressure ratio and mass flow
+//	int numElems = _opPnts.size();
+//	double pRatio[numElems];
+//	double wInlet[numElems];
+//	double etaAdi[numElems];
 //
-//		//reset the accelerator for the eta interpolation
-//		gsl_interp_accel_reset(acc);
+//	double pRatioMin = 1e9;
+//	double pRatioMax = -1e9;
 //
-//		//initialize the eta spline type
-//		gsl_spline *etaSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-//		gsl_spline_init(etaSpline, pRatio, etaAdi, numElems);
-//		etaAdiInterp = gsl_spline_eval(etaSpline, pressureRatio, acc);
-//		if ( gsl_isnan(etaAdiInterp) ) {
-//			//throw exception
-//		}
+//	int i = 0;
+//	std::vector<CompressorOperatingPoint>::iterator it;
+//	for ( it=_opPnts.begin() ; it < _opPnts.end(); it++, i++) {
+//		pRatio[i] = (*it).getPressRatio();
+//		wInlet[i] = (*it).getWin();
+//		etaAdi[i] = (*it).getEtaAdi();
 //
-//		//free the memory allocated for the spline types
-//		gsl_spline_free(wSpline);
-//		gsl_spline_free(etaSpline);
-//		gsl_interp_accel_free(acc);
-
-	}
-
-	*wIn = wInterp;
-	*etaAdiab = etaAdiInterp;
-
-}
+//		pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
+//		pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
+//
+//	}
+//
+//	double wInterp;
+//	double etaAdiInterp;
+//
+//	//check if pressureRatio is outside min and max bounds of pRatio array
+//	// if so use linear interpolation, else use higher order interpolation
+//	bool onlyLinrIntrp = true;
+//	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin) || onlyLinrIntrp ) {
+//		//pressureRatio is below min pRatio from array, use linear extrapolation
+//
+//		wInterp = LinearInterpUnsorted(numElems, pRatio, wInlet, pressureRatio, 1);
+//		etaAdiInterp = LinearInterpUnsorted(numElems, pRatio, etaAdi, pressureRatio, 1);
+//
+//	} else {
+//		//pressureRatio is bounded by arrays, use gsl cubic spline interpolation or akima spline
+//
+//		/*
+//		Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
+//		Wm5::IntpAkimaNonuniform1<double> etaAkimIntrp( numElems, pRatio, etaAdi);
+//
+//		wInterp = wAkimIntrp(pressureRatio);
+//		etaAdiInterp = etaAkimIntrp(pressureRatio);
+//		*/
+//
+////		//initialize a spline accelerator type
+////		gsl_interp_accel *acc = gsl_interp_accel_alloc();
+////
+////		//initialize the w corrected spline type
+////		gsl_spline *wSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
+////		gsl_spline_init(wSpline, pRatio, wInlet, numElems);
+////		wInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
+////		if ( gsl_isnan(wInterp) ) {
+////			//throw exception
+////		}
+////
+////		//reset the accelerator for the eta interpolation
+////		gsl_interp_accel_reset(acc);
+////
+////		//initialize the eta spline type
+////		gsl_spline *etaSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
+////		gsl_spline_init(etaSpline, pRatio, etaAdi, numElems);
+////		etaAdiInterp = gsl_spline_eval(etaSpline, pressureRatio, acc);
+////		if ( gsl_isnan(etaAdiInterp) ) {
+////			//throw exception
+////		}
+////
+////		//free the memory allocated for the spline types
+////		gsl_spline_free(wSpline);
+////		gsl_spline_free(etaSpline);
+////		gsl_interp_accel_free(acc);
+//
+//	}
+//
+//	*wIn = wInterp;
+//	*etaAdiab = etaAdiInterp;
+//
+//}
 
 
 CompressorOperatingPoint CompressorSpeedLine::getOpPntForPressureRatio(double pressureRatio) {
@@ -199,6 +206,7 @@ CompressorOperatingPoint CompressorSpeedLine::getOpPntForPressureRatio(double pr
 
     } else {
         // place holder for spline fit, but splines do not work well for extrapolation so be careful
+        throw std::exception();
     }
 
     //assign each part of the line data to the operating point
@@ -451,6 +459,7 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 
 
 	} else {
+	    throw std::exception();
 		//pressureRatio is bounded by arrays, use gsl interpolation
 
 		//Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
@@ -639,6 +648,7 @@ DiffuserPerformance CompressorSpeedLine::getDiffsrPerfForPressureRatio(double pr
 		tmpMachExitInterp = LinearInterpUnsorted(numElems, pRatio, tmpMachExit, pressureRatio, 1);
 
 	} else {
+	    throw std::exception();
 		//pressureRatio is bounded by arrays, use gsl interpolation
 
 		//Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
@@ -698,7 +708,7 @@ DiffuserPerformance CompressorSpeedLine::getDiffsrPerfForPressureRatio(double pr
 
 	}
 
-	//create new compressor stage performance type, initialize with interpolated values and return
+	//create new diffuser performance instance, initialize with interpolated values and return
 	DiffuserPerformance newDiffPerf = DiffuserPerformance(-9999,
 			tmpDelPqPInterp,
 			tmpPtInInterp,
@@ -712,6 +722,175 @@ DiffuserPerformance CompressorSpeedLine::getDiffsrPerfForPressureRatio(double pr
 			tmpTsExitInterp,
 			tmpMachExitInterp);
 	return newDiffPerf;
+
+}
+
+InletPerformance CompressorSpeedLine::getInletPerfForPressureRatio(double pressureRatio) {
+
+    //create arrays of pressure ratio and mass flow
+    int numElems = m_inletPerf.size();
+
+    double pRatio[numElems];
+
+    double tmpDelPtqPt[numElems];
+    double tmpPtOut[numElems];
+
+    double pRatioMin = 1e9;
+    double pRatioMax = -1e9;
+
+    int i = 0;
+    int opPntNmbr = -1;
+    std::vector<InletPerformance> vPrf = m_inletPerf;
+    std::vector<InletPerformance>::iterator it;
+    for ( it = vPrf.begin() ; it != vPrf.end(); ++it, ++i) {
+        opPntNmbr = (*it).getOpPntNmbr();
+        pRatio[i] = _opPnts[opPntNmbr-1].getPressRatio();
+
+        tmpDelPtqPt[i] = (*it).getDelPtqPtScroll();
+        tmpPtOut[i] = (*it).getPtOut();
+
+        pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
+        pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
+
+    }
+
+    double tmpDelPqPInterp;
+    double tmpPtOutInterp;
+
+    //check if pressureRatio is outside min and max bounds of pRatio array
+    // if so using simple extrapolation at end points, else use gsl spline functions
+    bool onlyLinrIntrp = true;
+    if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin || onlyLinrIntrp ) ) {
+        //pressureRatio is below min pRatio from array, use linear extrapolation
+
+        tmpDelPqPInterp = LinearInterpUnsorted(numElems, pRatio, tmpDelPtqPt, pressureRatio, 1);
+        tmpPtOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpPtOut, pressureRatio, 1);
+
+    } else {
+        throw std::exception();
+        //pressureRatio is bounded by arrays, use gsl interpolation
+
+        //Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
+        //Wm5::IntpAkimaNonuniform1<double> etaAkimIntrp( numElems, pRatio, etaAdi);
+
+        //wInterp = wAkimIntrp(pressureRatio);
+        //etaAdiInterp = etaAkimIntrp(pressureRatio);
+
+        /*
+        //allocate spline and spline accelorator
+        gsl_spline *spline = gsl_spline_alloc(gsl_interp_cspline, numElems);
+        gsl_interp_accel *acc = gsl_interp_accel_alloc();
+
+        //pt0
+        gsl_spline_init(spline, pRatio, tmpPt0, numElems);
+        pt0Interp = gsl_spline_eval(spline, pressureRatio, acc);
+        if ( gsl_isnan(pt0Interp) ) {
+            //throw exception
+        }
+
+        //pt1
+        //gsl_interp_accel_reset(acc);
+        gsl_spline_init(spline, pRatio, tmpPt1, numElems);
+        pt1Interp = gsl_spline_eval(spline, pressureRatio, acc);
+        if ( gsl_isnan(pt1Interp) ) {
+            //throw exception
+        }
+
+        //pt2
+        //gsl_interp_accel_reset(acc);
+        gsl_spline_init(spline, pRatio, tmpPt2, numElems);
+        pt2Interp = gsl_spline_eval(spline, pressureRatio, acc);
+        if ( gsl_isnan(pt2Interp) ) {
+            //throw exception
+        }
+
+        //pt3
+        //gsl_interp_accel_reset(acc);
+        gsl_spline_init(spline, pRatio, tmpPt3, numElems);
+        pt3Interp = gsl_spline_eval(spline, pressureRatio, acc);
+        if ( gsl_isnan(pt3Interp) ) {
+            //throw exception
+        }
+
+        //pt4
+        //gsl_interp_accel_reset(acc);
+        gsl_spline_init(spline, pRatio, tmpPt4, numElems);
+        pt4Interp = gsl_spline_eval(spline, pressureRatio, acc);
+        if ( gsl_isnan(pt4Interp) ) {
+            //throw exception
+        }
+
+        //free the memory allocated for the spline and accelorator types
+        gsl_spline_free(spline);
+        gsl_interp_accel_free(acc);
+        */
+
+    }
+
+    //create new inlet performance instance, initialize with interpolated values and return
+    InletPerformance newInletPerf = InletPerformance(-9999,
+            tmpDelPqPInterp,
+            tmpPtOutInterp);
+    return newInletPerf;
+
+}
+
+InletGuideVanePerformance CompressorSpeedLine::getInletGuideVanePerfForPressureRatio(double pressureRatio) {
+
+    //create arrays of pressure ratio and mass flow
+    int numElems = m_igvPerf.size();
+
+    double pRatio[numElems];
+
+    double tmpDelPtqPt[numElems];
+    double tmpPtOut[numElems];
+    double tmpAlpOut[numElems];
+
+    double pRatioMin = 1e9;
+    double pRatioMax = -1e9;
+
+    int i = 0;
+    int opPntNmbr = -1;
+    std::vector<InletGuideVanePerformance> vPrf = m_igvPerf;
+    std::vector<InletGuideVanePerformance>::iterator it;
+    for ( it = vPrf.begin() ; it != vPrf.end(); ++it, ++i) {
+        opPntNmbr = (*it).getOpPntNmbr();
+        pRatio[i] = _opPnts[opPntNmbr-1].getPressRatio();
+
+        tmpDelPtqPt[i] = (*it).getDelPtqPt();
+        tmpPtOut[i] = (*it).getPtOut();
+        tmpAlpOut[i] = (*it).getAlpOut();
+
+        pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
+        pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
+
+    }
+
+    double tmpDelPqPInterp;
+    double tmpPtOutInterp;
+    double tmpAlpOutInterp;
+
+    //check if pressureRatio is outside min and max bounds of pRatio array
+    // if so using simple extrapolation at end points, else use gsl spline functions
+    bool onlyLinrIntrp = true;
+    if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin || onlyLinrIntrp ) ) {
+        //pressureRatio is below min pRatio from array, use linear extrapolation
+
+        tmpDelPqPInterp = LinearInterpUnsorted(numElems, pRatio, tmpDelPtqPt, pressureRatio, 1);
+        tmpPtOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpPtOut, pressureRatio, 1);
+        tmpAlpOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpAlpOut, pressureRatio, 1);
+
+    } else {
+        throw std::exception();
+        //pressureRatio is bounded by arrays, use gsl interpolation
+    }
+
+    //create new inlet performance instance, initialize with interpolated values and return
+    InletGuideVanePerformance newIgvPerf = InletGuideVanePerformance(-9999,
+            tmpDelPqPInterp,
+            tmpPtOutInterp,
+            tmpAlpOutInterp);
+    return newIgvPerf;
 
 }
 
@@ -740,6 +919,16 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfAtOpPnt(int operatin
 DiffuserPerformance CompressorSpeedLine::getDiffsrPerfAtOpPnt(int operatingPoint) {
     DiffuserPerformance diffPrf = m_diffPerf.at(operatingPoint);
     return diffPrf;
+}
+
+InletPerformance CompressorSpeedLine::getInletPerfAtOpPnt(int operatingPoint) {
+    InletPerformance inletPrf = m_inletPerf.at(operatingPoint);
+    return inletPrf;
+}
+
+InletGuideVanePerformance CompressorSpeedLine::getInletGuideVanePerfAtOpPnt(int operatingPoint) {
+    InletGuideVanePerformance igvPrf = m_igvPerf.at(operatingPoint);
+    return igvPrf;
 }
 
 

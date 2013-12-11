@@ -15,6 +15,8 @@ class CompressorOperatingPoint;
 class CompressorStage;
 class CompressorStagePerformance;
 class DiffuserPerformance;
+class InletPerformance;
+class InletGuideVanePerformance;
 
 class CompressorSpeedLine {
 
@@ -27,18 +29,24 @@ public:
 	void addStage(CompressorStage stageToAdd);
 	void setStages(std::vector<CompressorStage*> stages);
 	void setDiffuserPerformance(std::vector<DiffuserPerformance> diffPerf);
+	void setInletPerformance(std::vector<InletPerformance> diffPerf);
+	void setInletGuideVanePerformance(std::vector<InletGuideVanePerformance> diffPerf);
 
-	void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
+	//void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
 	CompressorOperatingPoint getOpPntForPressureRatio(double pressureRatio);
 	DiffuserPerformance getDiffsrPerfForPressureRatio(double pressureRatio);
+	InletPerformance getInletPerfForPressureRatio(double pressureRatio);
+	InletGuideVanePerformance getInletGuideVanePerfForPressureRatio(double pressureRatio);
 
 	const CompressorOperatingPoint* getOpPnt(int opertaingPoint);
 	void getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfAtOpPnt(int operatingPoint, int stageNmbr);
 	DiffuserPerformance getDiffsrPerfAtOpPnt(int operatingPoint);
+	InletPerformance getInletPerfAtOpPnt(int operatingPoint);
+	InletGuideVanePerformance getInletGuideVanePerfAtOpPnt(int operatingPoint);
 
-	//shaft speed accessors
+	//shaft speed properties
 	double getShaftSpeed();
 	void setShaftSpeed(double shaftSpeed);
 
@@ -47,6 +55,8 @@ private:
 	std::vector<CompressorOperatingPoint> _opPnts;
 	std::vector<CompressorStage *> _stages;
 	std::vector<DiffuserPerformance> m_diffPerf;
+	std::vector<InletPerformance> m_inletPerf;
+	std::vector<InletGuideVanePerformance> m_igvPerf;
 	double _shaftSpeed; //rpm
 
 };
