@@ -36,6 +36,7 @@ public:
 	const CompressorOperatingPoint* getOpPnt(int opertaingPoint);
 	void getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfAtOpPnt(int operatingPoint, int stageNmbr);
+	DiffuserPerformance getDiffsrPerfAtOpPnt(int operatingPoint);
 
 	//shaft speed accessors
 	double getShaftSpeed();

@@ -15,11 +15,15 @@ public:
 	CompressorStagePerformance();
 
 	CompressorStagePerformance(int opPntNumber,
-		double rotorPt1Abs,
+	    double rotorPt1Abs,
 		double rotorPt1Rel,
 		double rotorPt2Rel,
+		double rotorPs1,
+		double rotorPs2,
 		double statorPt1,
 		double statorPt2,
+        double statorPs1,
+        double statorPs2,
 		double rotorTt1Abs,
 		double rotorTt1Rel,
 		double rotorTt2Rel,
@@ -64,12 +68,23 @@ public:
 	double getStatorPt1() const;
 	double getStatorPt2() const;
 
+	double getRotorPs1() const;
+	double getRotorPs2() const;
+
+	double getStatorPs1() const;
+	double getStatorPs2() const;
+
 	double getRotorTt1Abs() const;
 	double getRotorTt1Rel() const;
 	double getRotorTt2Rel() const;
 
 	double getStatorTt1() const;
 	double getStatorTt2() const;
+
+	double getRotorTs1() const;
+	double getRotorTs2() const;
+	double getStatorTs1() const;
+	double getStatorTs2() const;
 
 	double getRotorBeta1() const;
 	double getRotorBeta2() const;
@@ -120,11 +135,21 @@ private:
 	double m_strPt1;
 	double m_strPt2;
 
+	double m_rtrPs1;
+	double m_rtrPs2;
+	double m_sttrPs1;
+	double m_sttrPs2;
+
 	double m_rtrTt1Abs;
 	double m_rtrTt1Rel;
 	double m_rtrTt2Rel;
 	double m_strTt1;
 	double m_strTt2;
+
+    double m_rtrTs1;
+    double m_rtrTs2;
+    double m_sttrTs1;
+    double m_sttrTs2;
 
 	double m_beta1;
 	double m_beta2;

@@ -18,7 +18,7 @@ public:
 
 	CompressorAirfoilConfiguration(
 		AirfoilType airfoilType,
-		int getNumBlades,
+		int numBlades,
 		double sqc,
 		double tqc,
 		double aqc,

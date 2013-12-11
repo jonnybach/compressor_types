@@ -12,7 +12,10 @@ CompressorStagePerformance::CompressorStagePerformance() {
 }
 
 CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
-	double rotorPt1Abs, double rotorPt1Rel,	double rotorPt2Rel, double statorPt1, double statorPt2,
+	double rotorPt1Abs, double rotorPt1Rel,	double rotorPt2Rel,
+    double rotorPs1, double rotorPs2,
+	double statorPt1, double statorPt2,
+	double statorPs1, double statorPs2,
 	double rotorTt1Abs, double rotorTt1Rel,	double rotorTt2Rel, double statorTt1, double statorTt2,
 	double rotorBeta1,	double rotorBeta2,	double statorAlpha1, double statorAlpha2,
 	double stagePi, double stageEtaAdb, double stageWork, double rotorPhi,
@@ -27,6 +30,9 @@ CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
 	m_rtrPt1Abs = rotorPt1Abs;
 	m_rtrPt1Rel = rotorPt1Rel;
 	m_rtrPt2Rel = rotorPt2Rel;
+
+	m_rtrPs1 = rotorPs1;
+	m_rtrPs2 = rotorPs2;
 
 	m_strPt1 = statorPt1;
 	m_strPt2 = statorPt2;
@@ -82,17 +88,28 @@ CompressorStagePerformance::~CompressorStagePerformance() {
 
 //accessors
 int CompressorStagePerformance::getOptPntNmbr() const { return m_opPntNmbr; }
+
 double CompressorStagePerformance::getRotorPt1Abs() const { return m_rtrPt1Abs; }
 double CompressorStagePerformance::getRotorPt1Rel() const { return m_rtrPt1Rel; }
 double CompressorStagePerformance::getRotorPt2Rel() const { return m_rtrPt2Rel; }
 double CompressorStagePerformance::getStatorPt1() const { return m_strPt1; }
 double CompressorStagePerformance::getStatorPt2() const { return m_strPt2; }
 
+double CompressorStagePerformance::getRotorPs1() const { return m_rtrPs1; }
+double CompressorStagePerformance::getRotorPs2() const { return m_rtrPs2; }
+double CompressorStagePerformance::getStatorPs1() const { return m_sttrPs1; }
+double CompressorStagePerformance::getStatorPs2() const { return m_sttrPs2; }
+
 double CompressorStagePerformance::getRotorTt1Abs() const { return m_rtrTt1Abs; }
 double CompressorStagePerformance::getRotorTt1Rel() const { return m_rtrTt1Rel; }
 double CompressorStagePerformance::getRotorTt2Rel() const { return m_rtrTt2Rel; }
 double CompressorStagePerformance::getStatorTt1() const { return m_strTt1; }
 double CompressorStagePerformance::getStatorTt2() const { return m_strTt2; }
+
+double CompressorStagePerformance::getRotorTs1() const { return m_rtrTs1; }
+double CompressorStagePerformance::getRotorTs2() const { return m_rtrTs2; }
+double CompressorStagePerformance::getStatorTs1() const { return m_sttrTs1; }
+double CompressorStagePerformance::getStatorTs2() const { return m_sttrTs2; }
 
 double CompressorStagePerformance::getRotorBeta1() const { return m_beta1; }
 double CompressorStagePerformance::getRotorBeta2() const { return m_beta2; }

@@ -35,13 +35,16 @@ CompressorSpeedLine::~CompressorSpeedLine() {
 	//printf("called compressor speed line destructor\n\n");
 }
 
+
 void CompressorSpeedLine::addOperatingPoint(CompressorOperatingPoint opPntToAdd) { _opPnts.push_back(opPntToAdd); }
 
 void CompressorSpeedLine::addStage(CompressorStage stageToAdd) { _stages.push_back(&stageToAdd); }
 
+
 void CompressorSpeedLine::setStages(std::vector<CompressorStage *> stages) { _stages = stages; }
 
 void CompressorSpeedLine::setDiffuserPerformance(std::vector<DiffuserPerformance> diffPerf) { m_diffPerf = diffPerf; }
+
 
 void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab) {
 	//interpolates the mass flow and efficiency for a given pressure ratio
@@ -124,6 +127,7 @@ void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, doub
 
 }
 
+
 CompressorOperatingPoint CompressorSpeedLine::getOpPntForPressureRatio(double pressureRatio) {
 
     //interpolates the mass flow and efficiency for a given pressure ratio
@@ -167,7 +171,7 @@ CompressorOperatingPoint CompressorSpeedLine::getOpPntForPressureRatio(double pr
     double inletPressInterp;
     double phiInterp;
     double delTqTInterp;
-    double pRatioInterp;
+    //double pRatioInterp;
     double wInterp;
     double wInCorrInterp;
     double wOutCorrInterp;
@@ -257,8 +261,14 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	double tmpRtrPt1Rel[numElems];
 	double tmpRtrPt2Rel[numElems];
 
+    double tmpRtrPs1[numElems];
+    double tmpRtrPs2[numElems];
+
 	double tmpStrPt1[numElems];
 	double tmpStrPt2[numElems];
+
+    double tmpStrPs1[numElems];
+    double tmpStrPs2[numElems];
 
 	double tmpRtrTt1Abs[numElems];
 
@@ -310,8 +320,14 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 		tmpRtrPt1Rel[i] = (*it).getRotorPt1Rel();
 		tmpRtrPt2Rel[i] = (*it).getRotorPt2Rel();
 
+        tmpRtrPs1[i] = (*it).getRotorPs1();
+        tmpRtrPs2[i] = (*it).getRotorPs2();
+
 		tmpStrPt1[i] = (*it).getStatorPt1();
 		tmpStrPt2[i] = (*it).getStatorPt2();
+
+        tmpStrPs1[i] = (*it).getStatorPs1();
+        tmpStrPs2[i] = (*it).getStatorPs2();
 
 		tmpRtrTt1Abs[i] = (*it).getRotorTt1Abs();
 
@@ -353,11 +369,16 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	double tmpRtrDhInterp;
 	double tmpStrDhInterp;
 
-	double pt0Interp;
-	double pt1Interp;
-	double pt2Interp;
-	double pt3Interp;
-	double pt4Interp;
+	double tmpRtrPtInAbsInterp;
+	double tmpRtrPtInRelInterp;
+	double tmpRtrPtOutRelInterp;
+	double tmpStrPtInInterp;
+	double tmpStrPtOutInterp;
+
+	double tmpRtrPsInInterp;
+	double tmpRtrPsOutInterp;
+	double tmpStrPsInInterp;
+	double tmpStrPsOutInterp;
 
 	double tmpRtrTtInAbsInterp;
 
@@ -400,11 +421,16 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 		tmpRtrDhInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrDh, pressureRatio, 1);
 		tmpStrDhInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrDh, pressureRatio, 1);
 
-		pt0Interp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Abs, pressureRatio, 1);
-		pt1Interp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Rel, pressureRatio, 1);
-		pt2Interp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt2Rel, pressureRatio, 1);
-		pt3Interp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt1, pressureRatio, 1);
-		pt4Interp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt2, pressureRatio, 1);
+		tmpRtrPtInAbsInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Abs, pressureRatio, 1);
+		tmpRtrPtInRelInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Rel, pressureRatio, 1);
+		tmpRtrPtOutRelInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt2Rel, pressureRatio, 1);
+		tmpStrPtInInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt1, pressureRatio, 1);
+		tmpStrPtOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt2, pressureRatio, 1);
+
+        tmpRtrPsInInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPs1, pressureRatio, 1);
+        tmpRtrPsOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPs2, pressureRatio, 1);
+        tmpStrPsInInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPs1, pressureRatio, 1);
+        tmpStrPsOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPs2, pressureRatio, 1);
 
 		tmpRtrTtInAbsInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrTt1Abs, pressureRatio, 1);
 
@@ -486,11 +512,15 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 
 	//create new compressor stage performance type, initialize with interpolated values and return
 	CompressorStagePerformance newStgPerf = CompressorStagePerformance(-9999,
-			pt0Interp,
-			pt1Interp,
-			pt2Interp,
-			pt3Interp,
-			pt4Interp,
+			tmpRtrPtInAbsInterp,
+			tmpRtrPtInRelInterp,
+			tmpRtrPtOutRelInterp,
+			tmpRtrPsInInterp,
+			tmpRtrPsOutInterp,
+			tmpStrPtInInterp,
+			tmpStrPtOutInterp,
+            tmpStrPsInInterp,
+            tmpStrPsOutInterp,
 			tmpRtrTtInAbsInterp,
 			-9999.9,
 			-9999.9,
@@ -685,6 +715,7 @@ DiffuserPerformance CompressorSpeedLine::getDiffsrPerfForPressureRatio(double pr
 
 }
 
+
 const CompressorOperatingPoint* CompressorSpeedLine::getOpPnt(int operatingPoint) {
 	const CompressorOperatingPoint *pntToReturn = &_opPnts[operatingPoint];
 	return pntToReturn;
@@ -705,6 +736,12 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfAtOpPnt(int operatin
 	CompressorStagePerformance stgPerf = crntStage.getOpPntPerf().at(operatingPoint);
 	return stgPerf;
 }
+
+DiffuserPerformance CompressorSpeedLine::getDiffsrPerfAtOpPnt(int operatingPoint) {
+    DiffuserPerformance diffPrf = m_diffPerf.at(operatingPoint);
+    return diffPrf;
+}
+
 
 double CompressorSpeedLine::getShaftSpeed() {
 	return _shaftSpeed;
