@@ -67,7 +67,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.exe.debug.1138446308.1350863219" name="version.dat" rcbsApplicability="disable" resourcePath="src/version.dat" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="version.dat" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
@@ -908,7 +907,6 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.exe.release.934870974.381052140" name="version.dat" rcbsApplicability="disable" resourcePath="src/version.dat" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="version.dat" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
