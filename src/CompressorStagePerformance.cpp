@@ -104,7 +104,7 @@ double CompressorStagePerformance::getRotorTt1Abs() const { return m_rtrTt1Abs; 
 double CompressorStagePerformance::getRotorTt1Rel() const { return m_rtrTt1Rel; }
 double CompressorStagePerformance::getRotorTt2Rel() const { return m_rtrTt2Rel; }
 double CompressorStagePerformance::getStatorTt1() const { return m_strTt1; }
-double CompressorStagePerformance::getStatorTt2() const { return m_strTt2; }
+double CompressorStagePerformance::getStatorTt2() const { return m_strTt1; /*assume stator is adiabatic*/}
 
 double CompressorStagePerformance::getRotorTs1() const { return m_rtrTs1; }
 double CompressorStagePerformance::getRotorTs2() const { return m_rtrTs2; }

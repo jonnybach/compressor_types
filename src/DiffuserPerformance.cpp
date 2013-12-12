@@ -33,7 +33,7 @@ DiffuserPerformance::DiffuserPerformance(int opPntNumber,
 	m_machIn = machIn;
 	m_PtExit = PtExit;
 	m_PsExit = PsExit;
-	m_TtExit = TtIn;
+	m_TtExit = TtExit;
 	m_TsExit = TsExit;
 	m_machExit = machExit;
 }

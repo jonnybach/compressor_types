@@ -44,6 +44,7 @@ public:
 	double getTsExit() const;
 	double getMachExit() const;
 
+
 private:
 	double m_opPntNmbr;
 

@@ -22,11 +22,10 @@ public:
 	double getCalibFactor();
 
 	void addPerformancePoint(int index, DiffuserPerformance perfPntToAdd);
+	void replaceOpPntPerfAtIndex(int index, DiffuserPerformance newPerfPnt);
 
-	//accessors/properties
 	std::vector <DiffuserPerformance> getOpPntPerf();
 	DiffuserPerformance getOpPntPerfAtIndex(int index);
-	void replaceOpPntPerfAtIndex(int index, DiffuserPerformance newPerfPnt);
 
 
 private:
