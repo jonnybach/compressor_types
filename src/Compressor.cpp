@@ -27,6 +27,7 @@ Compressor::~Compressor() {
 	// TODO Auto-generated destructor stub
 }
 
+
 CompressorAnnulus *Compressor::getAnnulus() {
 	if (!_annulus) {
 		_annulus = new CompressorAnnulus();
@@ -38,6 +39,7 @@ void Compressor::setAnnulus(CompressorAnnulus *newAnnulus) {
 	delete(_annulus); // I think you have to destroy the original data pointed to otherwise a memory leak occurs
 	_annulus = newAnnulus;
 }
+
 
 Inlet *Compressor::getInlet() {
 	if (!_inlet) {
@@ -51,6 +53,7 @@ void Compressor::setInlet(Inlet *newInlet) {
 	_inlet = newInlet;
 }
 
+
 InletGuideVane *Compressor::getIgv() {
 	if (!_igv) {
 		_igv = new InletGuideVane();
@@ -62,6 +65,7 @@ void Compressor::setIgv(InletGuideVane *newIgv) {
 	delete(_igv); // I think you have to destroy the original data pointed to otherwise a memory leak occurs
 	_igv = newIgv;
 }
+
 
 Diffuser *Compressor::getDiffuser() {
 	if (!_diffuser) {
@@ -75,6 +79,7 @@ void Compressor::setDiffuser(Diffuser *newDiffuser) {
 	_diffuser = newDiffuser;
 }
 
+
 CompressorOperatingPoint *Compressor::getDesignPnt() {
 	return _desPnt;
 }
@@ -83,6 +88,7 @@ void Compressor::setDesignPnt(CompressorOperatingPoint *newDesignPnt) {
 	delete (_desPnt);
 	_desPnt = newDesignPnt;
 }
+
 
 LossCorrelationData *Compressor::getLossCorrData() {
 	if (!_lossCorrData) {
@@ -96,11 +102,22 @@ void Compressor::setLossCorrData(LossCorrelationData *newLossData) {
 	_lossCorrData = newLossData;
 }
 
+
+std::vector<CompressorLeakage> Compressor::getLeakages() {
+    return m_leaks;
+}
+
+void Compressor::setLeakages(std::vector<CompressorLeakage> newLeakages) {
+    m_leaks = newLeakages;
+}
+
+
 TipClearanceSpecification Compressor::getClearanceSpec() {	return _clearncSpec; }
 void Compressor::setClearnaceSpec(TipClearanceSpecification clearncSpec) {
 	if (clearncSpec < TIP_CLEARANCE_NONE || clearncSpec > TIP_CLEARANCE_ABSOLUTE ) throw std::exception();
 	_clearncSpec = clearncSpec;
 }
+
 
 std::vector<CompressorStage *> Compressor::getStages() {
 	return _stages;
@@ -178,6 +195,7 @@ CompressorStage *Compressor::findOrCreateStageWithName(std::string stageName) {
 
 }
 
+
 void Compressor::setVgvRuleAtStage(int stageNumber, double ruleFactor) {
 
 	//keep track of the igv in this vane schedule, therefore increase stageNumber by 1 when resizing the vector
@@ -193,6 +211,7 @@ double Compressor::getVgvRuleAtStage(int stageNumber) {
 	double vgvRule = _vaneSchedule.at(stageNumber);
 	return vgvRule;
 }
+
 
 void Compressor::addTwoDAirfoilConfig(CompressorTwoDAirfoilConfiguration newConfig ) { _airflTwoDConfigs.push_back(newConfig); }
 

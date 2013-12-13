@@ -24,6 +24,8 @@
 #include "DiffuserPerformance.h"
 #include "InletPerformance.h"
 #include "InletGuideVanePerformance.h"
+#include "CompressorLeakage.h"
+#include "CompressorLeakagePerformance.h"
 
 extern "C" {
 	#include "Interpolation.h"
@@ -52,87 +54,7 @@ void CompressorSpeedLine::setInletPerformance(std::vector<InletPerformance> inle
 
 void CompressorSpeedLine::setInletGuideVanePerformance(std::vector<InletGuideVanePerformance> igvPerf) { m_igvPerf = igvPerf; }
 
-
-//void CompressorSpeedLine::calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab) {
-//	//interpolates the mass flow and efficiency for a given pressure ratio
-//
-//	//create arrays of pressure ratio and mass flow
-//	int numElems = _opPnts.size();
-//	double pRatio[numElems];
-//	double wInlet[numElems];
-//	double etaAdi[numElems];
-//
-//	double pRatioMin = 1e9;
-//	double pRatioMax = -1e9;
-//
-//	int i = 0;
-//	std::vector<CompressorOperatingPoint>::iterator it;
-//	for ( it=_opPnts.begin() ; it < _opPnts.end(); it++, i++) {
-//		pRatio[i] = (*it).getPressRatio();
-//		wInlet[i] = (*it).getWin();
-//		etaAdi[i] = (*it).getEtaAdi();
-//
-//		pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
-//		pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
-//
-//	}
-//
-//	double wInterp;
-//	double etaAdiInterp;
-//
-//	//check if pressureRatio is outside min and max bounds of pRatio array
-//	// if so use linear interpolation, else use higher order interpolation
-//	bool onlyLinrIntrp = true;
-//	if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin) || onlyLinrIntrp ) {
-//		//pressureRatio is below min pRatio from array, use linear extrapolation
-//
-//		wInterp = LinearInterpUnsorted(numElems, pRatio, wInlet, pressureRatio, 1);
-//		etaAdiInterp = LinearInterpUnsorted(numElems, pRatio, etaAdi, pressureRatio, 1);
-//
-//	} else {
-//		//pressureRatio is bounded by arrays, use gsl cubic spline interpolation or akima spline
-//
-//		/*
-//		Wm5::IntpAkimaNonuniform1<double> wAkimIntrp( numElems, pRatio, wInlet);
-//		Wm5::IntpAkimaNonuniform1<double> etaAkimIntrp( numElems, pRatio, etaAdi);
-//
-//		wInterp = wAkimIntrp(pressureRatio);
-//		etaAdiInterp = etaAkimIntrp(pressureRatio);
-//		*/
-//
-////		//initialize a spline accelerator type
-////		gsl_interp_accel *acc = gsl_interp_accel_alloc();
-////
-////		//initialize the w corrected spline type
-////		gsl_spline *wSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-////		gsl_spline_init(wSpline, pRatio, wInlet, numElems);
-////		wInterp = gsl_spline_eval(wSpline, pressureRatio, acc);
-////		if ( gsl_isnan(wInterp) ) {
-////			//throw exception
-////		}
-////
-////		//reset the accelerator for the eta interpolation
-////		gsl_interp_accel_reset(acc);
-////
-////		//initialize the eta spline type
-////		gsl_spline *etaSpline = gsl_spline_alloc(gsl_interp_cspline, numElems);
-////		gsl_spline_init(etaSpline, pRatio, etaAdi, numElems);
-////		etaAdiInterp = gsl_spline_eval(etaSpline, pressureRatio, acc);
-////		if ( gsl_isnan(etaAdiInterp) ) {
-////			//throw exception
-////		}
-////
-////		//free the memory allocated for the spline types
-////		gsl_spline_free(wSpline);
-////		gsl_spline_free(etaSpline);
-////		gsl_interp_accel_free(acc);
-//
-//	}
-//
-//	*wIn = wInterp;
-//	*etaAdiab = etaAdiInterp;
-//
-//}
+void CompressorSpeedLine::setLeakages(std::vector<CompressorLeakage> leaks) { m_leaks = leaks; }
 
 
 CompressorOperatingPoint CompressorSpeedLine::getOpPntForPressureRatio(double pressureRatio) {
@@ -279,6 +201,11 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
     double tmpStrPs2[numElems];
 
 	double tmpRtrTt1Abs[numElems];
+    double tmpRtrTt1Rel[numElems];
+    double tmpRtrTt2Rel[numElems];
+
+    double tmpStrTt1[numElems];
+    double tmpStrTt2[numElems];
 
 	double tmpRtrBetaIn[numElems];
 	double tmpRtrBetaOut[numElems];
@@ -338,6 +265,11 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
         tmpStrPs2[i] = (*it).getStatorPs2();
 
 		tmpRtrTt1Abs[i] = (*it).getRotorTt1Abs();
+		tmpRtrTt1Rel[i] = (*it).getRotorTt1Rel();
+        tmpRtrTt2Rel[i] = (*it).getRotorTt2Rel();
+
+        tmpStrTt1[i] = (*it).getStatorTt1();
+        tmpStrTt2[i] = (*it).getStatorTt2();
 
 		tmpRtrBetaIn[i] = (*it).getRotorBeta1();
 		tmpRtrBetaOut[i] = (*it).getRotorBeta2();
@@ -380,15 +312,22 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 	double tmpRtrPtInAbsInterp;
 	double tmpRtrPtInRelInterp;
 	double tmpRtrPtOutRelInterp;
+
 	double tmpStrPtInInterp;
 	double tmpStrPtOutInterp;
 
 	double tmpRtrPsInInterp;
 	double tmpRtrPsOutInterp;
+
 	double tmpStrPsInInterp;
 	double tmpStrPsOutInterp;
 
 	double tmpRtrTtInAbsInterp;
+	double tmpRtrTtInRelInterp;
+    double tmpRtrTtOutRelInterp;
+
+    double tmpStrTtInInterp;
+    double tmpStrTtOutInterp;
 
 	double tmpRtrBetaInInterp;
 	double tmpRtrBetaOutInterp;
@@ -432,15 +371,22 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 		tmpRtrPtInAbsInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Abs, pressureRatio, 1);
 		tmpRtrPtInRelInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt1Rel, pressureRatio, 1);
 		tmpRtrPtOutRelInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPt2Rel, pressureRatio, 1);
+
 		tmpStrPtInInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt1, pressureRatio, 1);
 		tmpStrPtOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPt2, pressureRatio, 1);
 
         tmpRtrPsInInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPs1, pressureRatio, 1);
         tmpRtrPsOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrPs2, pressureRatio, 1);
+
         tmpStrPsInInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPs1, pressureRatio, 1);
         tmpStrPsOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrPs2, pressureRatio, 1);
 
 		tmpRtrTtInAbsInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrTt1Abs, pressureRatio, 1);
+        tmpRtrTtInRelInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrTt1Rel, pressureRatio, 1);
+        tmpRtrTtOutRelInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrTt2Rel, pressureRatio, 1);
+
+        tmpStrTtInInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrTt1, pressureRatio, 1);
+        tmpStrTtOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpStrTt2, pressureRatio, 1);
 
 		tmpRtrBetaInInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrBetaIn, pressureRatio, 1);
 		tmpRtrBetaOutInterp = LinearInterpUnsorted(numElems, pRatio, tmpRtrBetaOut, pressureRatio, 1);
@@ -531,10 +477,10 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
             tmpStrPsInInterp,
             tmpStrPsOutInterp,
 			tmpRtrTtInAbsInterp,
-			-9999.9,
-			-9999.9,
-			-9999.9,
-			-9999.9,
+			tmpRtrTtInRelInterp,
+			tmpRtrTtOutRelInterp,
+			tmpStrTtInInterp,
+			tmpStrTtOutInterp,
 			tmpRtrBetaInInterp,
 			tmpRtrBetaOutInterp,
 			tmpStrAlpInInterp,
@@ -560,6 +506,7 @@ CompressorStagePerformance CompressorSpeedLine::getStagePerfForPressureRatio(int
 			tmpStrIncInterp,
 			tmpRtrDevInterp,
 			tmpStrDevInterp);
+
 	return newStgPerf;
 
 }
@@ -894,23 +841,81 @@ InletGuideVanePerformance CompressorSpeedLine::getInletGuideVanePerfForPressureR
 
 }
 
+CompressorLeakagePerformance CompressorSpeedLine::getLeakagePerfForPressureRatio(int leakgIndex, double pressureRatio)
+{
+
+    //create arrays of pressure ratio and mass flow
+    CompressorLeakage crntLkg = m_leaks.at(leakgIndex);
+
+    //create arrays of pressure ratio and mass flow
+    int numElems = crntLkg.getOpPntPerf().size();
+
+    double pRatio[numElems];
+
+    double tmpPt[numElems];
+    double tmpPs[numElems];
+    double tmpTt[numElems];
+    double tmpTs[numElems];
+
+    double pRatioMin = 1e9;
+    double pRatioMax = -1e9;
+
+    int i = 0;
+    int opPntNmbr = -1;
+    std::vector<CompressorLeakagePerformance> vPrf = crntLkg.getOpPntPerf();
+    std::vector<CompressorLeakagePerformance>::iterator it;
+    for ( it = vPrf.begin() ; it != vPrf.end(); ++it, ++i) {
+        opPntNmbr = (*it).getOptPntNmbr();
+        pRatio[i] = _opPnts[opPntNmbr-1].getPressRatio();
+
+        tmpPt[i] = (*it).getPt();
+        tmpPs[i] = (*it).getPs();
+        tmpTt[i] = (*it).getTt();
+        tmpTs[i] = (*it).getTs();
+
+        pRatioMin = ((pRatio[i] < pRatioMin) ? pRatio[i] : pRatioMin);
+        pRatioMax = ((pRatio[i] > pRatioMax) ? pRatio[i] : pRatioMax);
+
+    }
+
+    double tmpPtInterp;
+    double tmpPsInterp;
+    double tmpTtInterp;
+    double tmpTsInterp;
+
+    //check if pressureRatio is outside min and max bounds of pRatio array
+    // if so using simple extrapolation at end points, else use gsl spline functions
+    bool onlyLinrIntrp = true;
+    if ( (pressureRatio > pRatioMax) || (pressureRatio < pRatioMin || onlyLinrIntrp ) ) {
+        //pressureRatio is below min pRatio from array, use linear extrapolation
+
+        tmpPtInterp = LinearInterpUnsorted(numElems, pRatio, tmpPt, pressureRatio, 1);
+        tmpPsInterp = LinearInterpUnsorted(numElems, pRatio, tmpPs, pressureRatio, 1);
+        tmpTtInterp = LinearInterpUnsorted(numElems, pRatio, tmpTt, pressureRatio, 1);
+        tmpTsInterp = LinearInterpUnsorted(numElems, pRatio, tmpTs, pressureRatio, 1);
+
+    } else {
+        throw std::exception();
+    }
+
+    //create new diffuser performance instance, initialize with interpolated values and return
+    CompressorLeakagePerformance newPerf = CompressorLeakagePerformance(-9999,
+            tmpPtInterp,
+            tmpPsInterp,
+            tmpTtInterp,
+            tmpTsInterp);
+
+    return newPerf;
+
+}
+
 
 const CompressorOperatingPoint* CompressorSpeedLine::getOpPnt(int operatingPoint) {
 	const CompressorOperatingPoint *pntToReturn = &_opPnts[operatingPoint];
 	return pntToReturn;
 }
 
-void CompressorSpeedLine::getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab) {
-	double pRatio = _opPnts[operatingPoint].getPressRatio();
-	double wInlet = _opPnts[operatingPoint].getWin();
-	double etaAdi = _opPnts[operatingPoint].getEtaAdi();
-	*pr = pRatio;
-	*wIn = wInlet;
-	*etaAdiab = etaAdi;
-}
-
 CompressorStagePerformance CompressorSpeedLine::getStagePerfAtOpPnt(int operatingPoint, int stageNmbr) {
-	//create arrays of pressure ratio and mass flow
 	CompressorStage crntStage = *( _stages[stageNmbr-1] );
 	CompressorStagePerformance stgPerf = crntStage.getOpPntPerf().at(operatingPoint);
 	return stgPerf;
@@ -931,11 +936,22 @@ InletGuideVanePerformance CompressorSpeedLine::getInletGuideVanePerfAtOpPnt(int 
     return igvPrf;
 }
 
+CompressorLeakagePerformance CompressorSpeedLine::getLeakagePerfAtOpPnt(int leakgIndex, int operatingPoint) {
+    CompressorLeakage crntLeakg = m_leaks.at(leakgIndex);
+    CompressorLeakagePerformance leakPerf = crntLeakg.getOpPntPerf().at(operatingPoint);
+    return leakPerf;
+}
+
+
+
 
 double CompressorSpeedLine::getShaftSpeed() {
 	return _shaftSpeed;
 }
 
+
 void CompressorSpeedLine::setShaftSpeed(double shaftSpeed) {
 	_shaftSpeed = shaftSpeed;
 }
+
+int CompressorSpeedLine::getNumberOfLeakages() { return (int)m_leaks.size(); }

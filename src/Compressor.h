@@ -12,6 +12,7 @@
 #include "CompressorOperatingPoint.h"
 #include "CompressorEnumerations.h"
 #include "CompressorTwoDAirfoilConfiguration.h"
+#include "CompressorLeakage.h"
 
 class CompressorAnnulus;
 class Inlet;
@@ -42,6 +43,9 @@ public:
 	LossCorrelationData *getLossCorrData();
 	void setLossCorrData(LossCorrelationData *newLossCorrData);
 
+	std::vector<CompressorLeakage> getLeakages();
+	void setLeakages(std::vector<CompressorLeakage> newLeakages);
+
 	TipClearanceSpecification getClearanceSpec();
 	void setClearnaceSpec(TipClearanceSpecification clearncSpec);
 
@@ -66,6 +70,8 @@ private:
 	InletGuideVane *_igv;
 	Diffuser *_diffuser;
 	LossCorrelationData *_lossCorrData;
+
+	std::vector<CompressorLeakage> m_leaks;
 
 	CompressorOperatingPoint *_desPnt;
 

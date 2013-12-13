@@ -17,6 +17,9 @@ class CompressorStagePerformance;
 class DiffuserPerformance;
 class InletPerformance;
 class InletGuideVanePerformance;
+class CompressorStage;
+class CompressorLeakage;
+class CompressorLeakagePerformance;
 
 class CompressorSpeedLine {
 
@@ -31,6 +34,7 @@ public:
 	void setDiffuserPerformance(std::vector<DiffuserPerformance> diffPerf);
 	void setInletPerformance(std::vector<InletPerformance> diffPerf);
 	void setInletGuideVanePerformance(std::vector<InletGuideVanePerformance> diffPerf);
+	void setLeakages(std::vector<CompressorLeakage> leaks);
 
 	//void calcMassAndEta(double pressureRatio, double *wIn, double *etaAdiab);
 	CompressorStagePerformance getStagePerfForPressureRatio(int stageNmbr, double pressureRatio);
@@ -38,6 +42,7 @@ public:
 	DiffuserPerformance getDiffsrPerfForPressureRatio(double pressureRatio);
 	InletPerformance getInletPerfForPressureRatio(double pressureRatio);
 	InletGuideVanePerformance getInletGuideVanePerfForPressureRatio(double pressureRatio);
+	CompressorLeakagePerformance getLeakagePerfForPressureRatio(int leakgIndex, double pressRatio);
 
 	const CompressorOperatingPoint* getOpPnt(int opertaingPoint);
 	void getPrMassAndEtaAtOpPnt(int operatingPoint, double *pr, double *wIn, double *etaAdiab);
@@ -45,10 +50,13 @@ public:
 	DiffuserPerformance getDiffsrPerfAtOpPnt(int operatingPoint);
 	InletPerformance getInletPerfAtOpPnt(int operatingPoint);
 	InletGuideVanePerformance getInletGuideVanePerfAtOpPnt(int operatingPoint);
+	CompressorLeakagePerformance getLeakagePerfAtOpPnt(int leakgIndex, int operatingPoint);
 
 	//shaft speed properties
 	double getShaftSpeed();
 	void setShaftSpeed(double shaftSpeed);
+
+	int getNumberOfLeakages();
 
 private:
 	//members
@@ -57,6 +65,8 @@ private:
 	std::vector<DiffuserPerformance> m_diffPerf;
 	std::vector<InletPerformance> m_inletPerf;
 	std::vector<InletGuideVanePerformance> m_igvPerf;
+	std::vector<CompressorLeakage> m_leaks;
+
 	double _shaftSpeed; //rpm
 
 };

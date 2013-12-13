@@ -10,6 +10,20 @@
 
 #include <string>
 
+enum AirfoilAxialLocation {
+    AIRFOIL_AXI_LOCATION_NONE = 0,
+    AIRFOIL_AXI_LOCATION_LE = 1,
+    AIRFOIL_AXI_LOCATION_MID = 2,
+    AIRFOIL_AXI_LOCATION_TE = 3,
+};
+
+enum AirfoilRadialLocation {
+    AIRFOIL_RADIAL_LOCATION_NONE = 0,
+    AIRFOIL_RADIAL_LOCATION_ID = 1,
+    AIRFOIL_RADIAL_LOCATION_MID = 2,
+    AIRFOIL_RADIAL_LOCATION_OD = 3,
+};
+
 enum AirfoilType {
 	AIRFOIL_TYPE_NONE = -1,
 	AIRFOIL_TYPE_NACA = 0,
@@ -47,6 +61,48 @@ enum RootType {
 };
 
 namespace sie_comp {
+
+inline std::string getAirfoilAxialLocationString(AirfoilAxialLocation enumValue)
+{
+    std::string strType;
+    switch (enumValue)
+    {
+    case AIRFOIL_AXI_LOCATION_LE:
+        strType = "LE";
+        break;
+    case AIRFOIL_AXI_LOCATION_MID:
+        strType = "MID";
+        break;
+    case AIRFOIL_AXI_LOCATION_TE:
+        strType = "TE";
+        break;
+    default:
+        strType = "NOT SET";
+        break;
+    }
+    return strType;
+}
+
+inline std::string getAirfoilRadialLocationString(AirfoilRadialLocation enumValue)
+{
+    std::string strType;
+    switch (enumValue)
+    {
+    case AIRFOIL_RADIAL_LOCATION_ID:
+        strType = "ID";
+        break;
+    case AIRFOIL_AXI_LOCATION_MID:
+        strType = "MID";
+        break;
+    case AIRFOIL_RADIAL_LOCATION_OD:
+        strType = "OD";
+        break;
+    default:
+        strType = "NOT SET";
+        break;
+    }
+    return strType;
+}
 
 inline std::string getAirfoilTypeString(AirfoilType airfoilTypeValue)
 {

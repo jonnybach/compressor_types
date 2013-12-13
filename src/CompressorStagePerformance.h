@@ -143,8 +143,8 @@ private:
 	double m_rtrTt1Abs;
 	double m_rtrTt1Rel;
 	double m_rtrTt2Rel;
-	double m_strTt1;
-	double m_strTt2;
+	double m_sttrTt1;
+	double m_sttrTt2;
 
     double m_rtrTs1;
     double m_rtrTs2;

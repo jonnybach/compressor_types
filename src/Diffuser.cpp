@@ -34,12 +34,10 @@ void Diffuser::addPerformancePoint(int index, DiffuserPerformance perfPntToAdd) 
 
 }
 
-std::vector <DiffuserPerformance> Diffuser::getOpPntPerf() {	return _optPntPerf; }
+std::vector <DiffuserPerformance> Diffuser::getOpPntPerf() { return _optPntPerf; }
 
-DiffuserPerformance Diffuser::getOpPntPerfAtIndex(int index) {
-	return _optPntPerf.at(index);
-}
+DiffuserPerformance Diffuser::getOpPntPerfAtIndex(int index) { return _optPntPerf.at(index); }
 
 void Diffuser::replaceOpPntPerfAtIndex(int index, DiffuserPerformance newPerfPnt) {
-	_optPntPerf.at(index) = newPerfPnt;
+    _optPntPerf.at(index) = newPerfPnt;
 }

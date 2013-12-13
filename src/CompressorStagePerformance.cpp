@@ -16,7 +16,8 @@ CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
     double rotorPs1, double rotorPs2,
 	double statorPt1, double statorPt2,
 	double statorPs1, double statorPs2,
-	double rotorTt1Abs, double rotorTt1Rel,	double rotorTt2Rel, double statorTt1, double statorTt2,
+	double rotorTt1Abs, double rotorTt1Rel,	double rotorTt2Rel,
+	double statorTt1, double statorTt2,
 	double rotorBeta1,	double rotorBeta2,	double statorAlpha1, double statorAlpha2,
 	double stagePi, double stageEtaAdb, double stageWork, double rotorPhi,
 	double statorPhi, double wheelSpeed,
@@ -37,12 +38,15 @@ CompressorStagePerformance::CompressorStagePerformance(int opPntNumber,
 	m_strPt1 = statorPt1;
 	m_strPt2 = statorPt2;
 
+    m_sttrPs1 = statorPs1;
+    m_sttrPs2 = statorPs2;
+
 	m_rtrTt1Abs = rotorTt1Abs;
 	m_rtrTt1Rel = rotorTt1Rel;
 	m_rtrTt2Rel = rotorTt2Rel;
 
-	m_strTt1 = statorTt1;
-	m_strTt2 = statorTt2;
+	m_sttrTt1 = statorTt1;
+	m_sttrTt2 = statorTt2;
 
 	m_beta1 = rotorBeta1;
 	m_beta2 = rotorBeta2;
@@ -103,8 +107,8 @@ double CompressorStagePerformance::getStatorPs2() const { return m_sttrPs2; }
 double CompressorStagePerformance::getRotorTt1Abs() const { return m_rtrTt1Abs; }
 double CompressorStagePerformance::getRotorTt1Rel() const { return m_rtrTt1Rel; }
 double CompressorStagePerformance::getRotorTt2Rel() const { return m_rtrTt2Rel; }
-double CompressorStagePerformance::getStatorTt1() const { return m_strTt1; }
-double CompressorStagePerformance::getStatorTt2() const { return m_strTt1; /*assume stator is adiabatic*/}
+double CompressorStagePerformance::getStatorTt1() const { return m_sttrTt1; }
+double CompressorStagePerformance::getStatorTt2() const { return m_sttrTt2; }
 
 double CompressorStagePerformance::getRotorTs1() const { return m_rtrTs1; }
 double CompressorStagePerformance::getRotorTs2() const { return m_rtrTs2; }
